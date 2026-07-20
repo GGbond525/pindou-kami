@@ -145,6 +145,16 @@ def agent_info():
     db.close()
     return jsonify({"success":True,"wechat_id":user["wechat_id"] or "","quota":user["agent_quota"],"used":used,"remaining":user["agent_quota"]-used})
 
+@app.route('/api/agent/list_codes', methods=['POST'])
+def agent_list_codes():
+    d = request.get_json()
+    u, t = d.get('username',''), d.get('t','all')
+    db = get_db()
+    where = "" if t == "all" else f"AND status='{t}'"
+    rows = db.execute(f"SELECT code, created_at, status, used_at FROM kami_codes WHERE type='member' AND used_by=? {where} ORDER BY id DESC LIMIT 200", (u,)).fetchall()
+    db.close()
+    return jsonify({"success":True,"codes":[dict(r) for r in rows]})
+
 @app.route('/api/agent/set_wechat', methods=['POST'])
 def agent_set_wechat():
     d = request.get_json()
