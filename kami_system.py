@@ -12,6 +12,17 @@ def get_db():
     conn.row_factory = sqlite3.Row
     conn.execute("CREATE TABLE IF NOT EXISTS kami_codes (id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT UNIQUE NOT NULL, type TEXT NOT NULL DEFAULT 'member', created_at TEXT, used_by TEXT, used_at TEXT, status TEXT DEFAULT 'unused')")
     conn.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, created_at TEXT, kami_code TEXT, activated_at TEXT, is_agent INTEGER DEFAULT 0, agent_kami_code TEXT, wechat_id TEXT, agent_quota INTEGER DEFAULT 50)")
+    # 迁移：旧表新增type列
+    try: conn.execute("ALTER TABLE kami_codes ADD COLUMN type TEXT NOT NULL DEFAULT 'member'")
+    except: pass
+    try: conn.execute("ALTER TABLE users ADD COLUMN is_agent INTEGER DEFAULT 0")
+    except: pass
+    try: conn.execute("ALTER TABLE users ADD COLUMN agent_kami_code TEXT")
+    except: pass
+    try: conn.execute("ALTER TABLE users ADD COLUMN wechat_id TEXT")
+    except: pass
+    try: conn.execute("ALTER TABLE users ADD COLUMN agent_quota INTEGER DEFAULT 50")
+    except: pass
     conn.commit()
     return conn
 
@@ -141,13 +152,14 @@ def admin_login():
 def admin_generate():
     d = request.get_json()
     if d.get('password') != ADMIN_PASSWORD: return jsonify({"success":False}), 403
-    n, t = min(d.get('count',1), 200), d.get('type','member')
-    l = 12 if t == 'agent' else 16
+    cnt = min(d.get('count',1), 200)
+    tp = d.get('type','member')
+    clen = 12 if tp == 'agent' else 16
     db = get_db(); codes = []
-    for _ in range(n):
-        c = gen_code(l)
+    for _ in range(cnt):
+        c = gen_code(clen)
         try:
-            db.execute("INSERT INTO kami_codes (code,type,created_at,status) VALUES (?,?,?,'unused')", (c, t, datetime.datetime.now().strftime('%Y-%m-%d %H:%M')))
+            db.execute("INSERT INTO kami_codes (code,type,created_at,status) VALUES (?,?,?,'unused')", (c, tp, datetime.datetime.now().strftime('%Y-%m-%d %H:%M')))
             codes.append(c)
         except: pass
     db.commit(); db.close()
