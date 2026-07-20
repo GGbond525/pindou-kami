@@ -377,6 +377,14 @@ function logout(){
 (function(){
   history.replaceState({page:'init'}, '');
   const u=localStorage.getItem('kami_user');
-  if(u){cu=u;document.getElementById('hw').textContent='欢迎，'+u;showHome();}
+  if(u){
+    cu=u;
+    // 刷新时检查是否已激活，已激活直接进应用
+    fetch(B+'/api/check_activated',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})})
+    .then(r=>r.json()).then(d=>{
+      if(d.activated)startApp();
+      else {document.getElementById('hw').textContent='欢迎，'+u;showHome();}
+    });
+  }
 })();
 </script></body></html>
