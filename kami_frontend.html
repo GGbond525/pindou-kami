@@ -201,10 +201,15 @@ async function login(){
     const d=await r.json();
     if(d.success){
       cu=u;localStorage.setItem('kami_user',u);
+      // 如果localStorage有激活标记，直接进应用（防DB丢失）
+      if(localStorage.getItem('kami_ok')){
+        if(d.is_agent)localStorage.setItem('kami_agent','1');
+        startApp(); return;
+      }
       const r2=await fetch(B+'/api/check_activated',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});
       const d2=await r2.json();
       if(d2.is_agent)localStorage.setItem('kami_agent','1');
-      if(d2.activated)startApp();
+      if(d2.activated){localStorage.setItem('kami_ok','1');startApp();}
       else showHome();
     }else{m.className='msg err';m.textContent=d.message;b.disabled=0;b.textContent='登录';}
   }catch(e){m.className='msg err';m.textContent='网络错误';b.disabled=0;b.textContent='登录';}
@@ -379,12 +384,15 @@ function logout(){
   const u=localStorage.getItem('kami_user');
   if(u){
     cu=u;
-    // 刷新时检查是否已激活，已激活直接进应用
-    fetch(B+'/api/check_activated',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})})
-    .then(r=>r.json()).then(d=>{
-      if(d.activated)startApp();
-      else {document.getElementById('hw').textContent='欢迎，'+u;showHome();}
-    });
+    // localStorage有标记直接进，防DB丢失
+    if(localStorage.getItem('kami_ok')){startApp();}
+    else {
+      fetch(B+'/api/check_activated',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})})
+      .then(r=>r.json()).then(d=>{
+        if(d.activated){localStorage.setItem('kami_ok','1');startApp();}
+        else {document.getElementById('hw').textContent='欢迎，'+u;showHome();}
+      });
+    }
   }
 })();
 </script></body></html>
