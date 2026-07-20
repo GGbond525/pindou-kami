@@ -354,9 +354,21 @@ function showUsers(){
   }else ul.style.display='none';
 }
 
+// 拦截浏览器返回键（只注册一次）
+let backHandler = false;
+function setupBackHandler() {
+  if (backHandler) return;
+  backHandler = true;
+  window.addEventListener('popstate', function(e) {
+    if (document.getElementById('app-root')?.classList.contains('show')) {
+      history.pushState({app:true}, '');
+    }
+  });
+}
+
 // 启动App
 function startApp(){
-  // 初始状态，让SPA自己管理历史
+  setupBackHandler();
   history.pushState({app:true}, '');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
   document.getElementById('app-root').classList.add('show');
