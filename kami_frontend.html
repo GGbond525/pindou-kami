@@ -376,6 +376,7 @@ window.addEventListener('popstate', function(e) {
 });
 
 (function(){
+  history.replaceState({page:'init'}, '');
   const u=localStorage.getItem('kami_user');
   if(u){cu=u;document.getElementById('hw').textContent='欢迎，'+u;showHome();}
 })();
