@@ -110,7 +110,8 @@ body{padding-top:28px!important}header{top:28px!important}
 <!-- 代理后台 -->
 <div id="agent-page">
 <div class="agent-box">
-<div class="agent-header"><h2 style="font-size:20px">代理后台</h2><p style="font-size:13px;opacity:.9;margin-top:4px">生成会员卡密 · 配置客服微信</p></div>
+<div class="agent-header"><h2 style="font-size:20px">代理后台</h2><p style="font-size:13px;opacity:.9;margin-top:4px">生成会员卡密 · 配置客服微信</p>
+<div style="margin-top:10px"><a onclick="goBack()" style="color:#fff;text-decoration:underline;cursor:pointer;font-size:13px">← 返回</a></div></div>
 <div class="agent-body">
   <div id="ago" style="display:none">
     <div class="stat-row" id="ags"></div>
@@ -242,6 +243,7 @@ async function showAgentBack(){
   const d=await r.json();
   if(!d.is_agent){alert('您不是代理，请升级代理');return}
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  document.getElementById('app-root').classList.remove('show');
   document.getElementById('agent-page').classList.add('show');
   document.getElementById('agn').style.display='none';
   document.getElementById('ago').style.display='block';
@@ -273,6 +275,17 @@ async function setWx(){
   const w=document.getElementById('awx2').value.trim();
   await fetch(B+'/api/agent/set_wechat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,wechat_id:w})});
   alert('已保存');
+}
+
+// 返回上一页
+function goBack(){
+  const app = document.getElementById('app-root');
+  if (app.classList.contains('show')) {
+    document.getElementById('agent-page').classList.remove('show');
+    app.classList.add('show');
+  } else {
+    showHome();
+  }
 }
 
 // 管理后台

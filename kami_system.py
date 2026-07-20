@@ -68,10 +68,12 @@ def activate():
     d = request.get_json()
     u, c = d.get('username',''), d.get('code','').strip().upper()
     db = get_db()
-    # 检查账号是否已绑定卡密
+    # 检查账号是否已绑定卡密（相同卡密可重复使用）
     user = db.execute("SELECT kami_code FROM users WHERE username=?", (u,)).fetchone()
     if user and user['kami_code']:
-        db.close(); return jsonify({"success":False,"message":"该账号已绑定会员卡密"})
+        if user['kami_code'] == c:
+            db.close(); return jsonify({"success":True,"message":"已激活，无需重复操作"})
+        db.close(); return jsonify({"success":False,"message":"该账号已绑定其他卡密"})
     row = db.execute("SELECT * FROM kami_codes WHERE code=? AND status='unused' AND type='member'", (c,)).fetchone()
     if not row:
         used = db.execute("SELECT * FROM kami_codes WHERE code=? AND status='used'", (c,)).fetchone()
