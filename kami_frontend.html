@@ -83,8 +83,7 @@ body{padding-top:28px!important}header{top:28px!important}
 <h1>拼小豆</h1>
 <div class="sub" id="hw">欢迎！请选择</div>
 <div style="display:flex;gap:12px;flex-direction:column">
-  <button class="btn" onclick="showAct()" style="margin-bottom:0">激活会员卡密（16位）</button>
-  <button class="btn" onclick="showAgAct()" style="background:#D4A017;color:#333">升级代理卡密（12位）</button>
+  <button class="btn" onclick="showAct()">激活会员卡密（16位）</button>
 </div>
 <div class="link" style="margin-top:16px"><a onclick="sa();return false" style="color:#888">管理员入口</a></div>
 </div></div>
@@ -167,7 +166,7 @@ body{padding-top:28px!important}header{top:28px!important}
 </div></div></div>
 
 <!-- 应用 -->
-<div id="app-root"><div class="topbar">拼小豆 · 卡密激活版 <a onclick="showAgentBack()">[代理后台]</a> | <a onclick="sa()">[管理后台]</a> | <a onclick="logout()">[退出]</a></div><div id="root"></div></div>
+<div id="app-root"><div class="topbar">拼小豆 <a onclick="showAgAct()" style="color:#FFD700">升级代理</a> | <a onclick="showAgentBack()">代理后台</a> | <a onclick="sa()">管理</a> | <a onclick="logout()">退出</a></div><div id="root"></div></div>
 
 <script>
 const B=window.location.origin;let cu='',admType='member',stsType='unused';
