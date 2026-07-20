@@ -2,150 +2,345 @@
 <html lang="zh-CN">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>拼小豆</title>
 <link rel="stylesheet" crossorigin href="https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-B-8XW312.css">
-<link rel="stylesheet" href="https://miaoda-font.cdn.bcebos.com/static/font_v1/fonts-code.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,'Microsoft YaHei',sans-serif;background:#FFF8F8}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,'Microsoft YaHei',sans-serif;background:#FFF8F8;min-height:100vh}
 .page{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;display:none;align-items:center;justify-content:center;background:linear-gradient(135deg,#8B0000,#4A0000)}
 .page.show{display:flex}
 .box{background:#fff;border-radius:16px;padding:36px;width:400px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
-.box h1{color:#8B0000;font-size:24px;margin-bottom:4px;letter-spacing:2px}
-.box .sub{color:#888;font-size:14px;margin-bottom:20px}
+.box h1{color:#8B0000;font-size:24px;margin-bottom:4px}
+.box .sub{color:#888;font-size:13px;margin-bottom:18px}
 .box input{width:100%;padding:11px 14px;border:2px solid #E8D5D5;border-radius:8px;font-size:15px;outline:none;margin-bottom:10px}
 .box input:focus{border-color:#8B0000}
 .box .btn{width:100%;padding:11px;background:#8B0000;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer}
 .box .btn:hover{background:#CC0000}.box .btn:disabled{background:#ccc;cursor:not-allowed}
-.box .msg{margin-top:10px;font-size:14px;min-height:20px}
-.box .ok{color:#28a745}.box .err{color:#dc3545}
-.box .link{color:#888;font-size:13px;margin-top:16px}
+.box .msg{margin-top:10px;font-size:14px;min-height:20px}.ok{color:#28a745}.err{color:#dc3545}
+.box .link{color:#888;font-size:13px;margin-top:14px;line-height:2}
 .box .link a{color:#D4A017;text-decoration:underline;font-weight:bold;cursor:pointer}
+.tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:12px;font-weight:bold}
+.tag-green{background:#e8f5e9;color:#2e7d32}.tag-gold{background:#fff8e1;color:#f57f17}
+.tag-gray{background:#f5f5f5;color:#888}
+/* 管理后台 */
 #admin-page{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99998;display:none;background:#FFF8F8;overflow-y:auto;padding:20px}
 #admin-page.show{display:block}
-.wa{max-width:800px;margin:0 auto;background:#fff;border-radius:12px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.wa{max-width:900px;margin:0 auto;background:#fff;border-radius:12px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
 .wa h1{color:#8B0000;margin-bottom:16px}
 .wa table{width:100%;border-collapse:collapse;font-size:13px}
 .wa td,.wa th{padding:6px 8px;border-bottom:1px solid #eee;text-align:left}
-.wa th{background:#f5f5f5}
+.wa th{background:#f5f5f5;position:sticky;top:0}
 .tools{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
-.tools button{padding:8px 16px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer}
-.tools .g{background:#D4A017}
-.kc{font-family:monospace;font-size:18px;letter-spacing:3px;color:#8B0000;font-weight:bold;cursor:pointer;padding:8px;background:#fff8f8;border-radius:4px;display:inline-block}
-.st{display:flex;gap:16px;margin:12px 0;font-size:13px}
+.tools button{padding:8px 16px;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px}
+.tools .red{background:#8B0000}.tools .gold{background:#D4A017;color:#333}.tools .gray{background:#666}
+.st{display:flex;gap:12px;margin:12px 0;font-size:13px;flex-wrap:wrap}
 .st span{background:#f5f5f5;padding:4px 12px;border-radius:4px}
-.tb{display:flex;margin:12px 0}
-.tb span{padding:8px 20px;cursor:pointer;border-bottom:2px solid transparent}
-.tb .on{border-bottom-color:#8B0000;color:#8B0000;font-weight:bold}
-.gen-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:30px;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.3);z-index:99999;max-width:90vw;max-height:80vh;overflow-y:auto;min-width:380px}
-.gen-popup h3{color:#8B0000;margin-bottom:16px}
-.gen-popup .codes{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
-.gen-popup .code-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f9f5f5;border-radius:6px}
-.gen-popup .code-row .ct{font-family:monospace;font-size:16px;letter-spacing:2px;flex:1;color:#8B0000;font-weight:bold}
-.cb{display:inline-flex;padding:4px 12px;border:1px solid #8B0000;background:#fff;color:#8B0000;border-radius:4px;cursor:pointer;font-size:12px}
-.cb:hover{background:#8B0000;color:#fff}
-.cb.cpd{background:#28a745;color:#fff;border-color:#28a745}
+.tabs{display:flex;margin:12px 0;gap:0;border-bottom:1px solid #eee}
+.tabs span{padding:8px 20px;cursor:pointer;border-bottom:2px solid transparent;font-size:13px}
+.tabs .on{border-bottom-color:#8B0000;color:#8B0000;font-weight:bold}
+.kc{font-family:monospace;font-size:16px;letter-spacing:2px;color:#8B0000;font-weight:bold;cursor:pointer;padding:6px;background:#fff8f8;border-radius:4px;display:inline-block}
+/* 代理后台 */
+#agent-page{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99997;display:none;background:#FFF8F8;overflow-y:auto;padding:20px}
+#agent-page.show{display:block}
+.agent-box{max-width:700px;margin:0 auto}
+.agent-header{background:linear-gradient(135deg,#D4A017,#f57f17);color:#fff;padding:24px;border-radius:12px 12px 0 0}
+.agent-body{background:#fff;padding:24px;border-radius:0 0 12px 12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.agent-body .stat-row{display:flex;gap:16px;margin:12px 0;flex-wrap:wrap}
+.agent-body .stat-row span{background:#f5f5f5;padding:8px 16px;border-radius:6px;font-size:14px}
+.agent-body .stat-row .num{font-size:24px;font-weight:bold;color:#8B0000}
+.gen-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:30px;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.3);z-index:99999;max-width:90vw;max-height:80vh;overflow-y:auto;min-width:350px}
+.gen-popup h3{color:#8B0000;margin-bottom:12px}
+.gen-popup .code-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f9f5f5;border-radius:6px;margin-bottom:4px}
+.gen-popup .code-row .ct{font-family:monospace;font-size:15px;letter-spacing:2px;flex:1;color:#8B0000;font-weight:bold}
+.cb{display:inline-flex;padding:3px 10px;border:1px solid #8B0000;background:#fff;color:#8B0000;border-radius:4px;cursor:pointer;font-size:12px}
+.cb:hover{background:#8B0000;color:#fff}.cb.cpd{background:#28a745;color:#fff;border-color:#28a745}
 .gen-popup .close-btn{width:100%;padding:10px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-top:8px}
-#app-root{display:none}
-#app-root.show{display:block}
-.topbar{position:fixed;top:0;left:0;right:0;z-index:99997;background:#8B0000;color:#fff;text-align:center;padding:5px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:16px}
-.topbar a{color:#D4A017;text-decoration:none;font-weight:bold;font-size:12px;cursor:pointer}
-.topbar a:hover{text-decoration:underline}
+#app-root{display:none}#app-root.show{display:block}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:99997;background:#8B0000;color:#fff;text-align:center;padding:5px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.topbar a{color:#D4A017;text-decoration:none;font-weight:bold;cursor:pointer}
 body{padding-top:28px!important}header{top:28px!important}
 </style></head>
 <body>
 
-<!-- 注册页 -->
+<!-- 注册 -->
 <div class="page show" id="reg-page">
 <div class="box"><h1>拼小豆</h1><div class="sub">注册账号</div>
-<input type="text" id="reg-user" placeholder="用户名" autocomplete="off">
-<input type="password" id="reg-pw" placeholder="密码（至少6位）">
-<button class="btn" id="reg-btn" onclick="doReg()">注册</button>
-<div class="msg" id="reg-msg"></div>
-<div class="link">已有账号？<a onclick="showLogin()">去登录</a></div></div></div>
+<input type="text" id="ru" placeholder="用户名" autocomplete="off">
+<input type="password" id="rp" placeholder="密码（至少6位）">
+<button class="btn" id="rb" onclick="reg()">注册</button>
+<div class="msg" id="rm"></div>
+<div class="link">已有账号？<a onclick="showL()">去登录</a></div></div></div>
 
-<!-- 登录页 -->
+<!-- 登录 -->
 <div class="page" id="login-page">
 <div class="box"><h1>拼小豆</h1><div class="sub">登录账号</div>
-<input type="text" id="login-user" placeholder="用户名" autocomplete="off">
-<input type="password" id="login-pw" placeholder="密码">
-<button class="btn" id="login-btn" onclick="doLogin()">登录</button>
-<div class="msg" id="login-msg"></div>
-<div class="link">没有账号？<a onclick="showReg()">去注册</a></div></div></div>
+<input type="text" id="lu" placeholder="用户名" autocomplete="off">
+<input type="password" id="lp" placeholder="密码">
+<button class="btn" id="lb" onclick="login()">登录</button>
+<div class="msg" id="lm"></div>
+<div class="link">没有账号？<a onclick="showR()">去注册</a></div></div></div>
 
-<!-- 激活页 -->
+<!-- 主页（选择激活方式） -->
+<div class="page" id="home-page">
+<div class="box">
+<h1>拼小豆</h1>
+<div class="sub" id="hw">欢迎！请选择</div>
+<div style="display:flex;gap:12px;flex-direction:column">
+  <button class="btn" onclick="showAct()" style="margin-bottom:0">激活会员卡密（16位）</button>
+  <button class="btn" onclick="showAgAct()" style="background:#D4A017;color:#333">升级代理卡密（12位）</button>
+</div>
+<div class="link" style="margin-top:16px"><a onclick="sa();return false" style="color:#888">管理员入口</a></div>
+</div></div>
+
+<!-- 激活会员卡密 -->
 <div class="page" id="act-page">
-<div class="box"><h1>拼小豆</h1><div class="sub">输入卡密激活后使用</div>
+<div class="box">
+<h1>激活会员</h1><div class="sub">请输入16位会员卡密</div>
 <input type="text" id="kc" maxlength="16" placeholder="16位卡密" autocomplete="off" oninput="this.value=this.value.toUpperCase()">
 <button class="btn" id="kb" onclick="doAct()">激活</button>
-<div class="msg" id="act-msg"></div>
-<div class="link"><a href="#" onclick="sa();return false" style="color:#D4A017;font-weight:bold">管理员入口</a></div></div></div>
+<div class="msg" id="am"></div>
+<div class="link"><a onclick="showHome()">返回</a></div></div></div>
 
-<!-- 管理页 -->
+<!-- 升级代理 -->
+<div class="page" id="agent-act-page">
+<div class="box">
+<h1>升级代理</h1><div class="sub">请输入12位代理卡密</div>
+<input type="text" id="akc" maxlength="12" placeholder="12位代理卡密" autocomplete="off" oninput="this.value=this.value.toUpperCase()">
+<input type="text" id="awx" placeholder="微信号（用户激活后可见）" autocomplete="off">
+<button class="btn" id="ab" onclick="doAgAct()" style="background:#D4A017;color:#333">升级代理</button>
+<div class="msg" id="aam"></div>
+<div class="link"><a onclick="showHome()">返回</a></div></div></div>
+
+<!-- 代理后台 -->
+<div id="agent-page">
+<div class="agent-box">
+<div class="agent-header"><h2 style="font-size:20px">代理后台</h2><p style="font-size:13px;opacity:.9;margin-top:4px">生成会员卡密 · 配置客服微信</p></div>
+<div class="agent-body">
+  <div id="ago" style="display:none">
+    <div class="stat-row" id="ags"></div>
+    <div style="margin:16px 0">
+      <input type="text" id="awx2" placeholder="设置客服微信" style="padding:8px 12px;border:2px solid #E8D5D5;border-radius:6px;font-size:14px;width:200px">
+      <button onclick="setWx()" style="padding:8px 16px;background:#D4A017;color:#333;border:none;border-radius:6px;cursor:pointer;margin-left:6px">保存</button>
+    </div>
+    <div class="tools">
+      <button class="gold" onclick="agGen(1)">生成1张</button>
+      <button class="gold" onclick="agGen(5)">生成5张</button>
+      <button class="gold" onclick="agGen(10)">生成10张</button>
+      <button style="background:#666" onclick="agRefresh()">刷新</button>
+    </div>
+    <div style="max-height:300px;overflow-y:auto"><table><thead><tr><th>卡密(16位)</th><th>状态</th><th>生成时间</th></tr></thead>
+    <tbody id="agl"></tbody></table></div>
+  </div>
+  <div id="agn" style="padding:20px;text-align:center;color:#888">未激活代理卡密</div>
+</div></div></div>
+
+<!-- 管理后台 -->
 <div id="admin-page">
-<div class="wa"><h1>卡密管理</h1>
-<div><input type="password" id="ap" placeholder="管理密码" style="padding:8px;border:2px solid #E8D5D5;border-radius:6px;margin:12px 0"><button onclick="al()" style="padding:8px 20px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:8px">登录</button></div>
+<div class="wa"><h1>卡密管理系统</h1>
+<div><input type="password" id="ap" placeholder="管理密码" style="padding:8px;border:2px solid #E8D5D5;border-radius:6px;margin:12px 0;width:200px">
+<button onclick="al()" style="padding:8px 20px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:6px">登录</button>
+<button onclick="document.getElementById('admin-page').classList.remove('show');document.getElementById('home-page').classList.add('show')" style="padding:8px 16px;background:#666;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:6px">返回</button>
+</div>
 <div id="apn" style="display:none">
-<div class="st" id="ast"></div>
-<div class="tools"><button onclick="gn(1)">1张</button><button onclick="gn(5)">5张</button><button onclick="gn(10)">10张</button><button class="g" onclick="gn(50)">50张</button><button onclick="rf()">刷新</button><button onclick="showUsers()">用户列表</button></div>
-<div class="tb"><span class="on" id="tu" onclick="sw('unused')">未使用</span><span id="tt" onclick="sw('used')">已使用</span></div>
-<div style="max-height:400px;overflow-y:auto"><table><thead><tr><th>卡密</th><th>状态</th><th>生成时间</th><th>使用时间</th><th>操作</th></tr></thead>
-<tbody id="kl"></tbody></table></div>
-<div id="user-list" style="display:none;margin-top:16px"><h3 style="color:#8B0000">已注册用户</h3><table><thead><tr><th>用户名</th><th>注册时间</th><th>卡密</th><th>激活时间</th></tr></thead><tbody id="ul"></tbody></table></div>
+  <div class="st" id="ast"></div>
+  <div class="tabs" id="adm-tabs">
+    <span class="on" onclick="swT(this,'member','adm-tabs')">会员卡密（16位）</span>
+    <span onclick="swT(this,'agent','adm-tabs')">代理卡密（12位）</span>
+    <span onclick="swT(this,'all','adm-tabs')">全部</span>
+  </div>
+  <div class="tools">
+    <button class="red" id="gen-member-btn" onclick="adGen(1,'member')">生成1张</button>
+    <button class="red" id="gen-member-btn5" onclick="adGen(5,'member')">生成5张</button>
+    <button class="red" id="gen-member-btn10" onclick="adGen(10,'member')">生成10张</button>
+    <button class="gold" id="gen-agent-btn" onclick="adGen(1,'agent')" style="display:none">生成1张代理</button>
+    <button class="gold" id="gen-agent-btn5" onclick="adGen(5,'agent')" style="display:none">生成5张代理</button>
+    <button class="gold" id="gen-agent-btn10" onclick="adGen(10,'agent')" style="display:none">生成10张代理</button>
+    <button class="gray" onclick="rf()">刷新</button>
+    <button class="gray" onclick="showUsers()">用户列表</button>
+  </div>
+  <div class="tabs" id="sts-tabs">
+    <span class="on" onclick="swT(this,'unused','sts-tabs')">未使用</span>
+    <span onclick="swT(this,'used','sts-tabs')">已使用</span>
+  </div>
+  <div style="max-height:350px;overflow-y:auto"><table><thead><tr><th>卡密</th><th>类型</th><th>状态</th><th>生成时间</th><th>使用者</th><th>操作</th></tr></thead>
+  <tbody id="kl"></tbody></table></div>
+  <div id="user-list" style="display:none;margin-top:20px"><h3 style="color:#8B0000">已注册用户</h3>
+  <table><thead><tr><th>用户名</th><th>注册时间</th><th>会员卡密</th><th>代理</th><th>代理卡密</th><th>微信号</th><th>操作</th></tr></thead>
+  <tbody id="ul"></tbody></table></div>
 </div></div></div>
 
 <!-- 应用 -->
-<div id="app-root"><div class="topbar">拼小豆 · 卡密激活版 <a href="#" onclick="sa();return false">[管理员]</a></div><div id="root"></div></div>
+<div id="app-root"><div class="topbar">拼小豆 · 卡密激活版 <a onclick="showAgentBack()">[代理后台]</a> | <a onclick="sa()">[管理后台]</a> | <a onclick="logout()">[退出]</a></div><div id="root"></div></div>
 
 <script>
-const B=window.location.origin;let ad=false,cu='unused',curUser='';
-function showReg(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('reg-page').classList.add('show');document.getElementById('reg-msg').textContent='';}
-function showLogin(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('login-page').classList.add('show');document.getElementById('login-msg').textContent='';}
+const B=window.location.origin;let cu='',admType='member',stsType='unused';
 
-async function doReg(){
-  const u=document.getElementById('reg-user').value.trim(),p=document.getElementById('reg-pw').value,m=document.getElementById('reg-msg'),b=document.getElementById('reg-btn');
+function showR(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('reg-page').classList.add('show')}
+function showL(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('login-page').classList.add('show')}
+function showHome(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('home-page').classList.add('show')}
+function showAct(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('act-page').classList.add('show');document.getElementById('am').textContent=''}
+function showAgAct(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('agent-act-page').classList.add('show');document.getElementById('aam').textContent=''}
+
+// 注册
+async function reg(){
+  const u=document.getElementById('ru').value.trim(),p=document.getElementById('rp').value,m=document.getElementById('rm'),b=document.getElementById('rb');
   if(!u||!p){m.className='msg err';m.textContent='请填写完整';return}
   if(p.length<6){m.className='msg err';m.textContent='密码至少6位';return}
   b.disabled=1;b.textContent='注册中...';
-  try{
-    const r=await fetch(B+'/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
-    const d=await r.json();
-    if(d.success){m.className='msg ok';m.textContent='注册成功！';setTimeout(showLogin,800);}
-    else{m.className='msg err';m.textContent=d.message;b.disabled=0;b.textContent='注册';}
+  try{const r=await fetch(B+'/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+  const d=await r.json();
+  if(d.success){m.className='msg ok';m.textContent='注册成功！';setTimeout(showL,500);}
+  else{m.className='msg err';m.textContent=d.message;b.disabled=0;b.textContent='注册';}
   }catch(e){m.className='msg err';m.textContent='网络错误';b.disabled=0;b.textContent='注册';}
 }
 
-async function doLogin(){
-  const u=document.getElementById('login-user').value.trim(),p=document.getElementById('login-pw').value,m=document.getElementById('login-msg'),b=document.getElementById('login-btn');
+// 登录
+async function login(){
+  const u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value,m=document.getElementById('lm'),b=document.getElementById('lb');
   if(!u||!p){m.className='msg err';m.textContent='请填写完整';return}
   b.disabled=1;b.textContent='登录中...';
   try{
     const r=await fetch(B+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
     const d=await r.json();
     if(d.success){
-      curUser=u;m.className='msg ok';m.textContent='登录成功！';
-      localStorage.setItem('kami_user',u);
-      // 检查是否已激活
+      cu=u;localStorage.setItem('kami_user',u);
       const r2=await fetch(B+'/api/check_activated',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});
       const d2=await r2.json();
-      if(d2.activated){setTimeout(st,300);}
-      else{setTimeout(showAct,300);}
+      if(d2.is_agent)localStorage.setItem('kami_agent','1');
+      if(d2.activated)startApp();
+      else showHome();
     }else{m.className='msg err';m.textContent=d.message;b.disabled=0;b.textContent='登录';}
   }catch(e){m.className='msg err';m.textContent='网络错误';b.disabled=0;b.textContent='登录';}
 }
 
-function showAct(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('act-page').classList.add('show');}
-
+// 激活会员16位
 async function doAct(){
-  const c=document.getElementById('kc').value.trim(),m=document.getElementById('act-msg'),b=document.getElementById('kb');
-  if(c.length<8){m.className='msg err';m.textContent='输入完整卡密';return}
+  const c=document.getElementById('kc').value.trim(),m=document.getElementById('am'),b=document.getElementById('kb');
+  if(c.length<16){m.className='msg err';m.textContent='请输入16位卡密';return}
   b.disabled=1;b.textContent='验证中...';
   try{
-    const r=await fetch(B+'/api/activate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:curUser,code:c})});
+    const r=await fetch(B+'/api/activate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,code:c})});
     const d=await r.json();
-    if(d.success){m.className='msg ok';m.textContent='激活成功！';localStorage.setItem('kami_ok','1');setTimeout(st,500);}
+    if(d.success){m.className='msg ok';m.textContent='激活成功！';localStorage.setItem('kami_ok','1');setTimeout(startApp,500);}
     else{m.className='msg err';m.textContent=d.message;b.disabled=0;b.textContent='激活';}
   }catch(e){m.className='msg err';m.textContent='网络错误';b.disabled=0;b.textContent='激活';}
 }
 
-function st(){
+// 升级代理12位
+async function doAgAct(){
+  const c=document.getElementById('akc').value.trim(),w=document.getElementById('awx').value.trim(),m=document.getElementById('aam'),b=document.getElementById('ab');
+  if(c.length<12){m.className='msg err';m.textContent='请输入12位代理卡密';return}
+  if(!w){m.className='msg err';m.textContent='请输入微信号';return}
+  b.disabled=1;b.textContent='升级中...';
+  try{
+    const r=await fetch(B+'/api/activate_agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,code:c,wechat_id:w})});
+    const d=await r.json();
+    if(d.success){m.className='msg ok';m.textContent='升级代理成功！';localStorage.setItem('kami_agent','1');setTimeout(()=>showAgentBack(),800);}
+    else{m.className='msg err';m.textContent=d.message;b.disabled=0;b.textContent='升级代理';}
+  }catch(e){m.className='msg err';m.textContent='网络错误';b.disabled=0;b.textContent='升级代理';}
+}
+
+// 代理后台
+async function showAgentBack(){
+  const r=await fetch(B+'/api/check_activated',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu})});
+  const d=await r.json();
+  if(!d.is_agent){alert('您不是代理，请升级代理');return}
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  document.getElementById('agent-page').classList.add('show');
+  document.getElementById('agn').style.display='none';
+  document.getElementById('ago').style.display='block';
+  agRefresh();
+}
+
+async function agRefresh(){
+  const r=await fetch(B+'/api/agent/info',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu})});
+  const d=await r.json();
+  if(!d.success)return;
+  document.getElementById('ags').innerHTML='<span>总配额: <span class="num">'+d.quota+'</span></span><span>已生成: <span class="num">'+d.used+'</span></span><span>剩余: <span class="num">'+d.remaining+'</span></span>';
+  document.getElementById('awx2').value=d.wechat_id;
+  const r2=await fetch(B+'/api/agent/list_codes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,t:'all'})});
+  const d2=await r2.json();
+  document.getElementById('agl').innerHTML=d2.codes.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.status=='unused'?'<span class="tag tag-green">未使用</span>':'<span class="tag tag-gray">已使用</span>')+'</td><td>'+(c.created_at||'-')+'</td></tr>').join('');
+}
+
+async function agGen(n){
+  const r=await fetch(B+'/api/agent/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,count:n})});
+  const d=await r.json();
+  if(d.success){
+    let rows=d.codes.map(c=>'<div class="code-row"><span class="ct">'+c+'</span><button class="cb" onclick="var t=this;navigator.clipboard.writeText(\''+c+'\').then(function(){t.textContent=\'已复制\';t.classList.add(\'cpd\');setTimeout(function(){t.textContent=\'复制\';t.classList.remove(\'cpd\')},2000)})">复制</button></div>').join('');
+    let h='<div class="gen-popup"><h3>已生成 '+d.codes.length+' 张会员卡密</h3><div>'+rows+'</div><button class="close-btn" onclick="this.parentElement.remove()">关闭</button></div>';
+    let dv=document.createElement('div');dv.innerHTML=h;document.body.appendChild(dv);agRefresh();
+  } else alert(d.message);
+}
+
+async function setWx(){
+  const w=document.getElementById('awx2').value.trim();
+  await fetch(B+'/api/agent/set_wechat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,wechat_id:w})});
+  alert('已保存');
+}
+
+// 管理后台
+function sa(){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  document.getElementById('admin-page').classList.add('show');
+}
+function al(){
+  fetch(B+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('ap').value})})
+  .then(r=>r.json()).then(d=>{if(d.success){document.getElementById('apn').style.display='block';rf();}else alert('密码错误')});
+}
+
+function swT(el,tab,grp){
+  document.querySelectorAll('#'+grp+' span').forEach(s=>s.classList.remove('on'));
+  el.classList.add('on');
+  if(grp=='adm-tabs'){
+    admType=tab;
+    document.querySelectorAll('[id^=gen-member-btn]').forEach(b=>b.style.display=tab=='agent'?'none':'');
+    document.querySelectorAll('[id^=gen-agent-btn]').forEach(b=>b.style.display=tab=='agent'?'':'none');
+    rf();
+  }
+  if(grp=='sts-tabs'){stsType=tab;rf();}
+}
+
+function adGen(n,t){
+  fetch(B+'/api/admin/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('ap').value,count:n,type:t})})
+  .then(r=>r.json()).then(d=>{
+    if(d.success){
+      let label=t=='agent'?'代理卡密(12位)':'会员卡密(16位)';
+      let rows=d.codes.map(c=>'<div class="code-row"><span class="ct">'+c+'</span><button class="cb" onclick="var t=this;navigator.clipboard.writeText(\''+c+'\').then(function(){t.textContent=\'已复制\';t.classList.add(\'cpd\');setTimeout(function(){t.textContent=\'复制\';t.classList.remove(\'cpd\')},2000)})">复制</button></div>').join('');
+      let h='<div class="gen-popup"><h3>已生成 '+d.codes.length+' 张 '+label+'</h3><div>'+rows+'</div><button class="close-btn" onclick="this.parentElement.remove()">关闭</button></div>';
+      let dv=document.createElement('div');dv.innerHTML=h;document.body.appendChild(dv);rf();
+    } else alert('生成失败');
+  });
+}
+
+function rf(){
+  fetch(B+'/api/admin/list?pw='+document.getElementById('ap').value+'&t='+stsType+'&type='+admType)
+  .then(r=>r.json()).then(d=>{
+    if(!d.success)return;
+    document.getElementById('kl').innerHTML=d.codes.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.type=='agent'?'<span class="tag tag-gold">代理</span>':'<span class="tag tag-green">会员</span>')+'</td><td>'+(c.status=='unused'?'<span class="tag tag-green">未使用</span>':'<span class="tag tag-gray">已使用</span>')+'</td><td>'+(c.created_at||'-')+'</td><td>'+(c.used_by||'-')+'</td><td>'+(c.status=='unused'?'<button onclick="dl('+c.id+')" style="background:none;border:1px solid #999;color:#999;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:12px">删</button>':'')+'</td></tr>').join('');
+    document.getElementById('ast').innerHTML='<span>全部: '+d.stats.total+'</span><span>未用: '+d.stats.unused+'</span><span>已用: '+d.stats.used+'</span> | <span style="color:#2e7d32">会员: '+d.stats.member+'</span><span style="color:#f57f17">代理: '+d.stats.agent+'</span>';
+  });
+}
+
+function dl(id){
+  if(!confirm('确定删除？'))return;
+  fetch(B+'/api/admin/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,password:document.getElementById('ap').value})})
+  .then(r=>r.json()).then(d=>{if(d.success)rf();});
+}
+
+function showUsers(){
+  const ul=document.getElementById('user-list');
+  if(ul.style.display==='none'){
+    fetch(B+'/api/admin/users?pw='+document.getElementById('ap').value).then(r=>r.json()).then(d=>{
+      if(d.success){
+        document.getElementById('ul').innerHTML=d.users.map(u=>'<tr><td>'+u.username+'</td><td>'+(u.created_at||'-')+'</td><td>'+(u.kami_code||'-')+'</td><td>'+(u.is_agent?'<span class="tag tag-gold">代理</span>':'<span class="tag tag-gray">用户</span>')+'</td><td>'+(u.agent_kami_code||'-')+'</td><td>'+(u.wechat_id||'-')+'</td></tr>').join('');
+        ul.style.display='block';
+      }
+    });
+  }else ul.style.display='none';
+}
+
+// 启动App
+function startApp(){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  document.getElementById('app-root').classList.add('show');
   const of=window.fetch;window.fetch=function(){return of.apply(this,arguments).then(async r=>{
     const u=(typeof arguments[0]==='string'?arguments[0]:arguments[0]?.url)||'',ct=r.headers?.get?.('content-type')||'';
     if(!ct.includes('json'))return r;
@@ -155,41 +350,18 @@ function st(){
       return new Response(JSON.stringify(j),{status:r.status,headers:r.headers});
     }catch(e){return r;}
   })};
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
-  document.getElementById('app-root').classList.add('show');
   const s=document.createElement('script');s.type='module';s.crossOrigin='';s.src='https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-BUyD1zWX.js';
   document.getElementById('root').after(s);
 }
 
-function sa(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('admin-page').classList.add('show');}
-function al(){fetch(B+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('ap').value})}).then(r=>r.json()).then(d=>{if(d.success){ad=true;document.getElementById('apn').style.display='block';rf();}else alert('密码错误')});}
-function gn(n){fetch(B+'/api/admin/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('ap').value,count:n})}).then(r=>r.json()).then(d=>{if(d.success){
-  let rows=d.codes.map(c=>'<div class="code-row"><span class="ct">'+c+'</span><button class="cb" onclick="var t=this;navigator.clipboard.writeText(\''+c+'\').then(function(){t.textContent=\'已复制\';t.classList.add(\'cpd\');setTimeout(function(){t.textContent=\'复制\';t.classList.remove(\'cpd\')},2000)})">复制</button></div>').join('');
-  let h='<div class="gen-popup" id="gen-popup"><h3>已生成 '+d.codes.length+' 张卡密</h3><div class="codes">'+rows+'</div><button class="close-btn" onclick="this.parentElement.remove()">关闭</button></div>';
-  let old=document.getElementById('gen-popup');if(old)old.remove();
-  let dv=document.createElement('div');dv.innerHTML=h;document.body.appendChild(dv);rf();}});}
-function sw(t){cu=t;document.querySelectorAll('.tb span').forEach(x=>x.classList.remove('on'));document.getElementById('t'+(t=='unused'?'u':'t')).classList.add('on');rf();}
-function rf(){fetch(B+'/api/admin/list?t='+cu+'&pw='+document.getElementById('ap').value).then(r=>r.json()).then(d=>{if(!d.success)return;
-  document.getElementById('kl').innerHTML=d.codes.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.status=='unused'?'<span style="color:#28a745">未使用</span>':'<span style="color:#dc3545">已使用</span>')+'</td><td>'+(c.created_at||'-')+'</td><td>'+(c.used_at||'-')+'</td><td>'+(c.status=='unused'?'<button onclick="dl('+c.id+')" style="background:none;border:1px solid #dc3545;color:#dc3545;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:12px">删除</button>':'')+'</td></tr>').join('');
-  document.getElementById('ast').innerHTML='<span>总计: '+d.stats.total+'</span><span>未用: '+d.stats.unused+'</span><span>已用: '+d.stats.used+'</span>';});}
-function dl(id){if(!confirm('确定删除？'))return;fetch(B+'/api/admin/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,password:document.getElementById('ap').value})}).then(r=>r.json()).then(d=>{if(d.success)rf();});}
-
-function showUsers(){
-  const ul=document.getElementById('user-list');
-  if(ul.style.display==='none'){
-    fetch(B+'/api/admin/users?pw='+document.getElementById('ap').value).then(r=>r.json()).then(d=>{
-      if(d.success){
-        document.getElementById('ul').innerHTML=d.users.map(u=>'<tr><td>'+u.username+'</td><td>'+(u.created_at||'-')+'</td><td>'+(u.kami_code||'-')+'</td><td>'+(u.activated_at||'-')+'</td></tr>').join('');
-        ul.style.display='block';
-      }
-    });
-  } else {ul.style.display='none';}
+function logout(){
+  localStorage.removeItem('kami_ok');localStorage.removeItem('kami_agent');
+  document.getElementById('app-root').classList.remove('show');
+  showL();
 }
 
 (function(){
-  const saved=localStorage.getItem('kami_user');
-  const ok=localStorage.getItem('kami_ok');
-  if(saved&&ok){curUser=saved;st();}
-  else if(saved){curUser=saved;showAct();}
+  const u=localStorage.getItem('kami_user');
+  if(u){cu=u;document.getElementById('hw').textContent='欢迎，'+u;showHome();}
 })();
 </script></body></html>
