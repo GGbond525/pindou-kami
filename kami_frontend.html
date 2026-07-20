@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拼小豆 - 卡密激活</title>
+<link rel="stylesheet" crossorigin href="https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-B-8XW312.css">
+<link rel="stylesheet" href="https://miaoda-font.cdn.bcebos.com/static/font_v1/fonts-code.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Microsoft YaHei',sans-serif;background:#FFF8F8}
+#act-page{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#8B0000,#4A0000)}
+#act-page.hidden{display:none}
+.box{background:#fff;border-radius:16px;padding:40px;width:400px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
+.box h1{color:#8B0000;font-size:24px;margin-bottom:4px}
+.box .sub{color:#888;font-size:14px;margin-bottom:24px}
+.box input{width:100%;padding:12px 16px;border:2px solid #E8D5D5;border-radius:8px;font-size:16px;text-align:center;font-family:monospace;outline:none}
+.box input:focus{border-color:#8B0000}
+.box .btn{width:100%;padding:12px;margin-top:12px;background:#8B0000;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
+.box .btn:hover{background:#CC0000}
+.box .btn:disabled{background:#ccc;cursor:not-allowed}
+.box .msg{margin-top:12px;font-size:14px;min-height:20px}
+.box .ok{color:#28a745}.box .err{color:#dc3545}
+.box .ft{color:#aaa;font-size:12px;margin-top:20px}
+#admin-page{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;display:none;background:#FFF8F8;overflow-y:auto;padding:20px}
+#admin-page.show{display:block}
+.wa{max-width:800px;margin:0 auto;background:#fff;border-radius:12px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.wa h1{color:#8B0000}
+.wa table{width:100%;border-collapse:collapse;font-size:13px}
+.wa td,.wa th{padding:6px 8px;border-bottom:1px solid #eee;text-align:left}
+.wa th{background:#f5f5f5}
+.tools{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+.tools button{padding:8px 16px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer}
+.tools .g{background:#D4A017}
+.kc{font-family:monospace;font-size:18px;letter-spacing:3px;color:#8B0000;font-weight:bold;cursor:pointer;padding:8px;background:#fff8f8;border-radius:4px;display:inline-block;transition:all .2s}
+.kc:hover{background:#f0e0e0}
+.kc-copied{background:#28a745!important;color:#fff!important}
+.copy-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border:1px solid #8B0000;background:#fff;color:#8B0000;border-radius:4px;cursor:pointer;font-size:12px;transition:all .2s}
+.copy-btn:hover{background:#8B0000;color:#fff}
+.copy-btn.copied{background:#28a745;color:#fff;border-color:#28a745}
+.gen-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:30px;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.3);z-index:99999;max-width:90vw;max-height:80vh;overflow-y:auto;min-width:380px}
+.gen-popup h3{color:#8B0000;margin-bottom:16px;font-size:18px}
+.gen-popup .codes{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.gen-popup .code-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f9f5f5;border-radius:6px;transition:background .2s}
+.gen-popup .code-row:hover{background:#f0e8e8}
+.gen-popup .code-row .code-text{font-family:monospace;font-size:16px;letter-spacing:2px;flex:1;color:#8B0000;font-weight:bold}
+.gen-popup .close-btn{display:block;width:100%;padding:10px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;margin-top:8px}
+.gen-popup .close-btn:hover{background:#CC0000}
+.st{display:flex;gap:16px;margin:12px 0;font-size:13px}
+.st span{background:#f5f5f5;padding:4px 12px;border-radius:4px}
+.tb{display:flex;margin:12px 0}
+.tb span{padding:8px 20px;cursor:pointer;border-bottom:2px solid transparent}
+.tb .on{border-bottom-color:#8B0000;color:#8B0000;font-weight:bold}
+#app-root{display:none}
+#app-root.show{display:block}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:99997;background:#8B0000;color:#fff;text-align:center;padding:5px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:16px}
+.topbar a{color:#D4A017;text-decoration:none;font-weight:bold;font-size:12px;cursor:pointer}
+.topbar a:hover{text-decoration:underline}
+body{padding-top:28px!important}
+header{top:28px!important}
+</style>
+</head>
+<body>
+
+<div id="act-page">
+<div class="box">
+  <h1>拼小豆</h1>
+  <div class="sub">输入卡密激活后使用</div>
+  <input type="text" id="kc" maxlength="16" placeholder="16位卡密" autocomplete="off" oninput="this.value=this.value.toUpperCase()">
+  <button class="btn" id="kb" onclick="act()">激活</button>
+  <div class="msg" id="km"></div>
+  <div class="ft"><a href="#" onclick="sa();return false" style="color:#D4A017;text-decoration:underline;font-weight:bold">管理员入口</a></div>
+</div></div>
+
+<div id="admin-page">
+<div class="wa">
+  <h1>卡密管理</h1>
+  <div><input type="password" id="ap" placeholder="管理密码" style="padding:8px;border:2px solid #E8D5D5;border-radius:6px;margin:12px 0" value="WzS18350168663."><button onclick="al()" style="padding:8px 20px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:8px">登录</button></div>
+  <div id="apn" style="display:none">
+  <div class="st" id="ast"></div>
+  <div class="tools">
+    <button onclick="gn(1)">1张</button>
+    <button onclick="gn(5)">5张</button>
+    <button onclick="gn(10)">10张</button>
+    <button class="g" onclick="gn(50)">50张</button>
+    <button onclick="rf()">刷新</button>
+  </div>
+  <div class="tb"><span class="on" id="tu" onclick="sw('unused')">未使用</span><span id="tt" onclick="sw('used')">已使用</span></div>
+  <div style="max-height:400px;overflow-y:auto"><table><thead><tr><th>卡密</th><th>状态</th><th>生成时间</th><th>使用时间</th><th>操作</th></tr></thead>
+  <tbody id="kl"></tbody></table></div>
+</div></div></div>
+
+<div id="app-root">
+<div class="topbar">拼小豆 · 卡密激活版 <a href="#" onclick="sa();return false">[管理员]</a></div>
+<div id="root"></div>
+</div>
+
+<script>
+const B=window.location.origin;
+let ad=false, cu='unused';
+
+async function act(){
+  const c=document.getElementById('kc').value.trim(), b=document.getElementById('kb'), m=document.getElementById('km');
+  if(c.length<8){m.className='msg err';m.textContent='请输入完整卡密';return}
+  b.disabled=true; b.textContent='验证中...';
+  try{
+    const r=await fetch(B+'/api/activate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:c})});
+    const d=await r.json();
+    if(d.success){m.className='msg ok';m.textContent='激活成功！';localStorage.setItem('kami_ok','1');setTimeout(st,500);}
+    else{m.className='msg err';m.textContent=d.message;b.disabled=false;b.textContent='激活';}
+  }catch(e){m.className='msg err';m.textContent='网络错误';b.disabled=false;b.textContent='激活';}
+}
+
+function st(){
+  document.getElementById('act-page').classList.add('hidden');
+  document.getElementById('app-root').classList.add('show');
+  const of=window.fetch;
+  window.fetch=function(){return of.apply(this,arguments).then(async r=>{
+    const u=(typeof arguments[0]==='string'?arguments[0]:arguments[0]?.url)||'',ct=r.headers?.get?.('content-type')||'';
+    if(!ct.includes('json'))return r;
+    try{const j=JSON.parse(await r.clone().text());
+      if(u.includes('profiles')){(Array.isArray(j)?j:[j]).forEach(x=>{if(x&&typeof x==='object'){x.role='member';x.member_expires_at='2099-12-31T23:59:59Z';x.agent_quota=999}});return new Response(JSON.stringify(j),{status:200,headers:{'content-type':'application/json'}});}
+      if(u.includes('activate-card')||u.includes('functions')){return new Response(JSON.stringify({success:true}),{status:200,headers:{'content-type':'application/json'}});}
+      return new Response(JSON.stringify(j),{status:r.status,headers:r.headers});
+    }catch(e){return r;}
+  })};
+  const s=document.createElement('script');s.type='module';s.crossOrigin='';s.src='https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-BUyD1zWX.js';
+  document.getElementById('root').after(s);
+}
+
+function sa(){document.getElementById('act-page').classList.add('hidden');document.getElementById('admin-page').classList.add('show');}
+function al(){fetch(B+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('ap').value})}).then(r=>r.json()).then(d=>{if(d.success){ad=true;document.getElementById('apn').style.display='block';rf();}else alert('密码错误')});}
+function gn(n){fetch(B+'/api/admin/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('ap').value,count:n})}).then(r=>r.json()).then(d=>{if(d.success){
+  let rows = d.codes.map(c => '<div class="code-row"><span class="code-text">'+c+'</span><button class="copy-btn" onclick="var t=this;navigator.clipboard.writeText(\''+c+'\').then(function(){t.textContent=\'已复制\';t.classList.add(\'copied\');setTimeout(function(){t.textContent=\'复制\';t.classList.remove(\'copied\')},2000)})">复制</button></div>').join('');
+  let html = '<div class="gen-popup" id="gen-popup"><h3>已生成 '+d.codes.length+' 张卡密</h3><div class="codes">'+rows+'</div><button class="close-btn" onclick="this.parentElement.remove()">关闭</button></div>';
+  let old = document.getElementById('gen-popup');
+  if(old) old.remove();
+  let dv = document.createElement('div'); dv.innerHTML = html; document.body.appendChild(dv);
+  rf();}});}
+function sw(t){cu=t;document.querySelectorAll('.tb span').forEach(x=>x.classList.remove('on'));document.getElementById('t'+(t=='unused'?'u':'t')).classList.add('on');rf();}
+function rf(){fetch(B+'/api/admin/list?t='+cu+'&pw='+document.getElementById('ap').value).then(r=>r.json()).then(d=>{if(!d.success)return;
+  document.getElementById('kl').innerHTML=d.codes.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.status=='unused'?'<span style="color:#28a745">未使用</span>':'<span style="color:#dc3545">已使用</span>')+'</td><td>'+(c.created_at||'-')+'</td><td>'+(c.used_at||'-')+'</td><td>'+(c.status=='unused'?'<button onclick="dl('+c.id+')" style="background:none;border:1px solid #dc3545;color:#dc3545;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:12px">删除</button>':'')+'</td></tr>').join('');
+  document.getElementById('ast').innerHTML='<span>总计: '+d.stats.total+'</span><span>未用: '+d.stats.unused+'</span><span>已用: '+d.stats.used+'</span>';});}
+function dl(id){if(!confirm('确定删除？'))return;fetch(B+'/api/admin/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,password:document.getElementById('ap').value})}).then(r=>r.json()).then(d=>{if(d.success)rf();});}
+(function(){if(localStorage.getItem('kami_ok'))st();})();
+</script>
+</body>
+</html>
