@@ -95,7 +95,7 @@ body{padding-top:28px!important}header{top:28px!important}
 <input type="text" id="kc" maxlength="16" placeholder="16位卡密" autocomplete="off" oninput="this.value=this.value.toUpperCase()">
 <button class="btn" id="kb" onclick="doAct()">激活</button>
 <div class="msg" id="am"></div>
-<div class="link"><a onclick="showHome()">返回</a></div></div></div>
+<div class="link"><a onclick="backToApp()">返回</a></div></div></div>
 
 <!-- 升级代理 -->
 <div class="page" id="agent-act-page">
@@ -105,7 +105,7 @@ body{padding-top:28px!important}header{top:28px!important}
 <input type="text" id="awx" placeholder="微信号（用户激活后可见）" autocomplete="off">
 <button class="btn" id="ab" onclick="doAgAct()" style="background:#D4A017;color:#333">升级代理</button>
 <div class="msg" id="aam"></div>
-<div class="link"><a onclick="showHome()">返回</a></div></div></div>
+<div class="link"><a onclick="backToApp()">返回</a></div></div></div>
 
 <!-- 代理后台 -->
 <div id="agent-page">
@@ -136,7 +136,7 @@ body{padding-top:28px!important}header{top:28px!important}
 <div class="wa"><h1>卡密管理系统</h1>
 <div><input type="password" id="ap" placeholder="管理密码" style="padding:8px;border:2px solid #E8D5D5;border-radius:6px;margin:12px 0;width:200px">
 <button onclick="al()" style="padding:8px 20px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:6px">登录</button>
-<button onclick="document.getElementById('admin-page').classList.remove('show');document.getElementById('home-page').classList.add('show')" style="padding:8px 16px;background:#666;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:6px">返回</button>
+<button onclick="document.getElementById('admin-page').classList.remove('show');backToApp()" style="padding:8px 16px;background:#666;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:6px">返回</button>
 </div>
 <div id="apn" style="display:none">
   <div class="st" id="ast"></div>
@@ -282,12 +282,17 @@ async function setWx(){
   alert('已保存');
 }
 
-// 返回上一页
+// 返回上一页（从代理后台返回应用）
 function goBack(){
-  const app = document.getElementById('app-root');
-  if (app.classList.contains('show')) {
-    document.getElementById('agent-page').classList.remove('show');
-    app.classList.add('show');
+  document.getElementById('agent-page').classList.remove('show');
+  document.getElementById('app-root').classList.add('show');
+}
+
+// 返回应用（已激活用户）或主页（未激活）
+function backToApp(){
+  if (localStorage.getItem('kami_ok')) {
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+    document.getElementById('app-root').classList.add('show');
   } else {
     showHome();
   }
