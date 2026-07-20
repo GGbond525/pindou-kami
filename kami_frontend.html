@@ -171,10 +171,10 @@ body{padding-top:28px!important}header{top:28px!important}
 <script>
 const B=window.location.origin;let cu='',admType='member',stsType='unused';
 
-function showR(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('reg-page').classList.add('show')}
-function showL(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('login-page').classList.add('show')}
-function showHome(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('home-page').classList.add('show')}
-function showAct(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('act-page').classList.add('show');document.getElementById('am').textContent=''}
+function showR(){history.pushState({page:'reg'},'');document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('reg-page').classList.add('show')}
+function showL(){history.pushState({page:'login'},'');document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('login-page').classList.add('show')}
+function showHome(){history.pushState({page:'home'},'');document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('home-page').classList.add('show')}
+function showAct(){history.pushState({page:'act'},'');document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('act-page').classList.add('show');document.getElementById('am').textContent=''}
 function showAgAct(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('agent-act-page').classList.add('show');document.getElementById('aam').textContent=''}
 
 // 注册
@@ -338,6 +338,14 @@ function showUsers(){
 
 // 启动App
 function startApp(){
+  // 防止返回键退出应用
+  history.pushState({app:true}, '');
+  window.addEventListener('popstate', function(e) {
+    if (document.getElementById('app-root').classList.contains('show')) {
+      history.pushState({app:true}, '');
+      // 可以不打扰用户，静默拦截
+    }
+  });
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
   document.getElementById('app-root').classList.add('show');
   const of=window.fetch;window.fetch=function(){return of.apply(this,arguments).then(async r=>{
@@ -358,6 +366,14 @@ function logout(){
   document.getElementById('app-root').classList.remove('show');
   showL();
 }
+
+// 防止浏览器返回键退出应用
+window.addEventListener('popstate', function(e) {
+  // 如果已进入应用，拦截返回
+  if (document.getElementById('app-root').classList.contains('show')) {
+    history.pushState({app:true}, '');
+  }
+});
 
 (function(){
   const u=localStorage.getItem('kami_user');
