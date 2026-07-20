@@ -163,7 +163,7 @@ def admin_generate():
             codes.append(c)
         except: pass
     db.commit(); db.close()
-    return jsonify({"success":True,"count":len(codes),"codes":codes,"type":t})
+    return jsonify({"success":True,"count":len(codes),"codes":codes,"type":tp})
 
 @app.route('/api/admin/list')
 def admin_list():
