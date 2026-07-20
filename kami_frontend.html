@@ -338,14 +338,8 @@ function showUsers(){
 
 // 启动App
 function startApp(){
-  // 防止返回键退出应用
+  // 初始状态，让SPA自己管理历史
   history.pushState({app:true}, '');
-  window.addEventListener('popstate', function(e) {
-    if (document.getElementById('app-root').classList.contains('show')) {
-      history.pushState({app:true}, '');
-      // 可以不打扰用户，静默拦截
-    }
-  });
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
   document.getElementById('app-root').classList.add('show');
   const of=window.fetch;window.fetch=function(){return of.apply(this,arguments).then(async r=>{
@@ -366,14 +360,6 @@ function logout(){
   document.getElementById('app-root').classList.remove('show');
   showL();
 }
-
-// 防止浏览器返回键退出应用
-window.addEventListener('popstate', function(e) {
-  // 如果已进入应用，拦截返回
-  if (document.getElementById('app-root').classList.contains('show')) {
-    history.pushState({app:true}, '');
-  }
-});
 
 (function(){
   history.replaceState({page:'init'}, '');

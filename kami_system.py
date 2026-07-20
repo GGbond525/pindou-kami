@@ -68,6 +68,10 @@ def activate():
     d = request.get_json()
     u, c = d.get('username',''), d.get('code','').strip().upper()
     db = get_db()
+    # 检查账号是否已绑定卡密
+    user = db.execute("SELECT kami_code FROM users WHERE username=?", (u,)).fetchone()
+    if user and user['kami_code']:
+        db.close(); return jsonify({"success":False,"message":"该账号已绑定会员卡密"})
     row = db.execute("SELECT * FROM kami_codes WHERE code=? AND status='unused' AND type='member'", (c,)).fetchone()
     if not row:
         used = db.execute("SELECT * FROM kami_codes WHERE code=? AND status='used'", (c,)).fetchone()
@@ -84,6 +88,10 @@ def activate_agent():
     d = request.get_json()
     u, c, w = d.get('username',''), d.get('code','').strip().upper(), d.get('wechat_id','').strip()
     db = get_db()
+    # 检查账号是否已绑定代理卡密
+    user = db.execute("SELECT is_agent, agent_kami_code FROM users WHERE username=?", (u,)).fetchone()
+    if user and user['is_agent'] and user['agent_kami_code']:
+        db.close(); return jsonify({"success":False,"message":"该账号已绑定代理卡密"})
     row = db.execute("SELECT * FROM kami_codes WHERE code=? AND status='unused' AND type='agent'", (c,)).fetchone()
     if not row:
         used = db.execute("SELECT * FROM kami_codes WHERE code=? AND status='used'", (c,)).fetchone()
