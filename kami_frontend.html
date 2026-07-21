@@ -136,7 +136,7 @@ body{padding-top:28px!important}header{top:28px!important}
 <div class="wa"><h1>卡密管理系统</h1>
 <div><input type="password" id="ap" placeholder="管理密码" style="padding:8px;border:2px solid #E8D5D5;border-radius:6px;margin:12px 0;width:200px">
 <button onclick="al()" style="padding:8px 20px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:6px">登录</button>
-<button onclick="document.getElementById('admin-page').classList.remove('show');backToApp()" style="padding:8px 16px;background:#666;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:6px">返回</button>
+<button onclick="document.getElementById('admin-page').classList.remove('show');if(localStorage.getItem('kami_ok')){document.getElementById('app-root').classList.add('show');}else{showHome();}" style="padding:8px 16px;background:#666;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:6px">返回</button>
 </div>
 <div id="apn" style="display:none">
   <div class="st" id="ast"></div>
@@ -176,7 +176,12 @@ function showR(){history.pushState({page:'reg'},'');document.querySelectorAll('.
 function showL(){history.pushState({page:'login'},'');document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('login-page').classList.add('show')}
 function showHome(){history.pushState({page:'home'},'');document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('home-page').classList.add('show')}
 function showAct(){history.pushState({page:'act'},'');document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('act-page').classList.add('show');document.getElementById('am').textContent=''}
-function showAgAct(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('agent-act-page').classList.add('show');document.getElementById('aam').textContent=''}
+function showAgAct(){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  document.getElementById('app-root').classList.remove('show');
+  document.getElementById('agent-act-page').classList.add('show');
+  document.getElementById('aam').textContent='';
+}
 
 // 注册
 async function reg(){
@@ -317,9 +322,10 @@ function backToApp(){
   }
 }
 
-// 管理后台
+// 管理后台（从app进入时隐藏app）
 function sa(){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  document.getElementById('app-root').classList.remove('show');
   document.getElementById('admin-page').classList.add('show');
 }
 function al(){
@@ -410,9 +416,13 @@ function startApp(){
 }
 
 function logout(){
-  localStorage.removeItem('kami_ok');localStorage.removeItem('kami_agent');
+  localStorage.removeItem('kami_ok');localStorage.removeItem('kami_agent');localStorage.removeItem('kami_user');
+  cu='';
   document.getElementById('app-root').classList.remove('show');
+  document.getElementById('admin-page').classList.remove('show');
+  document.getElementById('agent-page').classList.remove('show');
   showL();
+  document.getElementById('lu').value=''; document.getElementById('lp').value='';
 }
 
 (function(){
@@ -420,15 +430,17 @@ function logout(){
   const u=localStorage.getItem('kami_user');
   if(u){
     cu=u;
-    // localStorage有标记直接进，防DB丢失
-    if(localStorage.getItem('kami_ok')){startApp();}
-    else {
-      fetch(B+'/api/check_activated',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})})
-      .then(r=>r.json()).then(d=>{
-        if(d.activated){localStorage.setItem('kami_ok','1');startApp();}
-        else {document.getElementById('hw').textContent='欢迎，'+u;showHome();}
-      });
-    }
+    // 优先用kami_ok标记（防DB丢失）
+    if(localStorage.getItem('kami_ok')){startApp();return;}
+    fetch(B+'/api/check_activated',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})})
+    .then(r=>r.json()).then(d=>{
+      if(d.activated){localStorage.setItem('kami_ok','1');startApp();}
+      else {document.getElementById('hw').textContent='欢迎，'+u;showHome();}
+    }).catch(()=>{
+      // 网络错误或无服务时，有kami_ok标记也尝试进
+      if(localStorage.getItem('kami_ok'))startApp();
+      else showL();
+    });
   }
 })();
 </script></body></html>
