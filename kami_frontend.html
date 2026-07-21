@@ -159,7 +159,7 @@ body{padding-top:28px!important}header{top:28px!important}
     <span class="on" onclick="swT(this,'unused','sts-tabs')">未使用</span>
     <span onclick="swT(this,'used','sts-tabs')">已使用</span>
   </div>
-  <div style="max-height:350px;overflow-y:auto"><table><thead><tr><th>卡密</th><th>类型</th><th>状态</th><th>生成时间</th><th>使用者</th><th>操作</th></tr></thead>
+  <div style="max-height:350px;overflow-y:auto"><table><thead><tr><th>卡密</th><th>类型</th><th>状态</th><th>生成时间</th><th>创建者/使用者</th><th>使用时间</th><th>操作</th></tr></thead>
   <tbody id="kl"></tbody></table></div>
   <div id="user-list" style="display:none;margin-top:20px"><h3 style="color:#8B0000">已注册用户</h3>
   <table><thead><tr><th>用户名</th><th>注册时间</th><th>会员卡密</th><th>代理</th><th>代理卡密</th><th>微信号</th><th>操作</th></tr></thead>
@@ -228,7 +228,17 @@ async function doAct(){
   try{
     const r=await fetch(B+'/api/activate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,code:c})});
     const d=await r.json();
-    if(d.success){m.className='msg ok';m.textContent='激活成功！';localStorage.setItem('kami_ok','1');setTimeout(startApp,500);}
+    if(d.success){
+      m.className='msg ok';m.textContent='激活成功！';
+      localStorage.setItem('kami_ok','1');
+      // 查代理客服微信
+      try{
+        const wxr=await fetch(B+'/api/get_agent_wechat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:c})});
+        const wxd=await wxr.json();
+        if(wxd.success) m.textContent='激活成功！客服微信: '+wxd.wechat_id;
+      }catch(e){}
+      setTimeout(startApp,1500);
+    }
     else{m.className='msg err';m.textContent=d.message;b.disabled=0;b.textContent='激活';}
   }catch(e){m.className='msg err';m.textContent='网络错误';b.disabled=0;b.textContent='激活';}
 }
@@ -361,7 +371,7 @@ function rf(){
   fetch(B+'/api/admin/list?pw='+document.getElementById('ap').value+'&t='+stsType+'&type='+admType)
   .then(r=>r.json()).then(d=>{
     if(!d.success)return;
-    document.getElementById('kl').innerHTML=d.codes.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.type=='agent'?'<span class="tag tag-gold">代理</span>':'<span class="tag tag-green">会员</span>')+'</td><td>'+(c.status=='unused'?'<span class="tag tag-green">未使用</span>':'<span class="tag tag-gray">已使用</span>')+'</td><td>'+(c.created_at||'-')+'</td><td>'+(c.used_by||'-')+'</td><td>'+(c.status=='unused'?'<button onclick="dl('+c.id+')" style="background:none;border:1px solid #999;color:#999;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:12px">删</button>':'')+'</td></tr>').join('');
+    document.getElementById('kl').innerHTML=d.codes.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.type=='agent'?'<span class="tag tag-gold">代理</span>':'<span class="tag tag-green">会员</span>')+'</td><td>'+(c.status=='unused'?'<span class="tag tag-green">未使用</span>':'<span class="tag tag-gray">已使用</span>')+'</td><td>'+(c.created_at||'-')+'</td><td>'+(c.created_by||'-')+'/'+(c.used_by||'')+'</td><td>'+(c.used_at||'-')+'</td><td>'+(c.status=='unused'?'<button onclick="dl('+c.id+')" style="background:none;border:1px solid #999;color:#999;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:12px">删</button>':'')+'</td></tr>').join('');
     document.getElementById('ast').innerHTML='<span>全部: '+d.stats.total+'</span><span>未用: '+d.stats.unused+'</span><span>已用: '+d.stats.used+'</span> | <span style="color:#2e7d32">会员: '+d.stats.member+'</span><span style="color:#f57f17">代理: '+d.stats.agent+'</span>';
   });
 }

@@ -12,17 +12,13 @@ def get_db():
     conn.row_factory = sqlite3.Row
     conn.execute("CREATE TABLE IF NOT EXISTS kami_codes (id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT UNIQUE NOT NULL, type TEXT NOT NULL DEFAULT 'member', created_at TEXT, used_by TEXT, used_at TEXT, status TEXT DEFAULT 'unused')")
     conn.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, created_at TEXT, kami_code TEXT, activated_at TEXT, is_agent INTEGER DEFAULT 0, agent_kami_code TEXT, wechat_id TEXT, agent_quota INTEGER DEFAULT 50)")
-    # 迁移：旧表新增type列
-    try: conn.execute("ALTER TABLE kami_codes ADD COLUMN type TEXT NOT NULL DEFAULT 'member'")
-    except: pass
-    try: conn.execute("ALTER TABLE users ADD COLUMN is_agent INTEGER DEFAULT 0")
-    except: pass
-    try: conn.execute("ALTER TABLE users ADD COLUMN agent_kami_code TEXT")
-    except: pass
-    try: conn.execute("ALTER TABLE users ADD COLUMN wechat_id TEXT")
-    except: pass
-    try: conn.execute("ALTER TABLE users ADD COLUMN agent_quota INTEGER DEFAULT 50")
-    except: pass
+    # 迁移兼容
+    for col in ["type","created_by"]:
+        try: conn.execute(f"ALTER TABLE kami_codes ADD COLUMN {col} TEXT")
+        except: pass
+    for col in ["is_agent","agent_kami_code","wechat_id","agent_quota"]:
+        try: conn.execute(f"ALTER TABLE users ADD COLUMN {col} TEXT")
+        except: pass
     conn.commit()
     return conn
 
@@ -121,15 +117,16 @@ def agent_generate():
     db = get_db()
     user = db.execute("SELECT * FROM users WHERE username=? AND is_agent=1", (u,)).fetchone()
     if not user: db.close(); return jsonify({"success":False,"message":"无权限"}), 403
-    used = db.execute("SELECT COUNT(*) as c FROM kami_codes WHERE type='member' AND used_by=?", (u,)).fetchone()['c']
+    used = db.execute("SELECT COUNT(*) as c FROM kami_codes WHERE type='member' AND created_by=?", (u,)).fetchone()['c']
     remaining = user['agent_quota'] - used
     if n > remaining: n = remaining
     if n <= 0: db.close(); return jsonify({"success":False,"message":f"剩余额度{remaining}张，不足"})
     codes = []
+    now_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
     for _ in range(n):
         c = gen_code(16)
         try:
-            db.execute("INSERT INTO kami_codes (code,type,created_at,status) VALUES (?,'member',?,'unused')", (c, datetime.datetime.now().strftime('%Y-%m-%d %H:%M')))
+            db.execute("INSERT INTO kami_codes (code,type,created_at,created_by,status) VALUES (?,'member',?,?,'unused')", (c, now_str, u))
             codes.append(c)
         except: pass
     db.commit(); db.close()
@@ -141,7 +138,7 @@ def agent_info():
     db = get_db()
     user = db.execute("SELECT * FROM users WHERE username=? AND is_agent=1", (u,)).fetchone()
     if not user: db.close(); return jsonify({"success":False}), 403
-    used = db.execute("SELECT COUNT(*) as c FROM kami_codes WHERE type='member' AND used_by=?", (u,)).fetchone()['c']
+    used = db.execute("SELECT COUNT(*) as c FROM kami_codes WHERE type='member' AND created_by=?", (u,)).fetchone()['c']
     db.close()
     return jsonify({"success":True,"wechat_id":user["wechat_id"] or "","quota":user["agent_quota"],"used":used,"remaining":user["agent_quota"]-used})
 
@@ -207,6 +204,18 @@ def admin_delete():
     if d.get('password') != ADMIN_PASSWORD: return jsonify({"success":False}), 403
     db = get_db(); db.execute("DELETE FROM kami_codes WHERE id=?", (d['id'],)); db.commit(); db.close()
     return jsonify({"success":True})
+
+@app.route('/api/get_agent_wechat', methods=['POST'])
+def get_agent_wechat():
+    code = request.get_json().get('code','').strip().upper()
+    db = get_db()
+    row = db.execute("SELECT created_by FROM kami_codes WHERE code=? AND created_by IS NOT NULL", (code,)).fetchone()
+    if row:
+        agent = db.execute("SELECT wechat_id FROM users WHERE username=?", (row['created_by'],)).fetchone()
+        if agent and agent['wechat_id']:
+            db.close(); return jsonify({"success":True,"wechat_id":agent['wechat_id']})
+    db.close()
+    return jsonify({"success":False,"message":"无客服信息"})
 
 @app.route('/api/admin/users')
 def admin_users():
