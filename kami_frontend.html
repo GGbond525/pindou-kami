@@ -244,9 +244,20 @@ async function doAgAct(){
 
 // 代理后台
 async function showAgentBack(){
+  // 先检查本地缓存
+  if (localStorage.getItem('kami_agent')) {
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+    document.getElementById('app-root').classList.remove('show');
+    document.getElementById('agent-page').classList.add('show');
+    document.getElementById('agn').style.display='none';
+    document.getElementById('ago').style.display='block';
+    agRefresh();
+    return;
+  }
   const r=await fetch(B+'/api/check_activated',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu})});
   const d=await r.json();
   if(!d.is_agent){alert('您不是代理，请升级代理');return}
+  localStorage.setItem('kami_agent','1');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
   document.getElementById('app-root').classList.remove('show');
   document.getElementById('agent-page').classList.add('show');
@@ -256,14 +267,22 @@ async function showAgentBack(){
 }
 
 async function agRefresh(){
-  const r=await fetch(B+'/api/agent/info',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu})});
-  const d=await r.json();
-  if(!d.success)return;
-  document.getElementById('ags').innerHTML='<span>总配额: <span class="num">'+d.quota+'</span></span><span>已生成: <span class="num">'+d.used+'</span></span><span>剩余: <span class="num">'+d.remaining+'</span></span>';
-  document.getElementById('awx2').value=d.wechat_id;
-  const r2=await fetch(B+'/api/agent/list_codes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,t:'all'})});
-  const d2=await r2.json();
-  document.getElementById('agl').innerHTML=d2.codes.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.status=='unused'?'<span class="tag tag-green">未使用</span>':'<span class="tag tag-gray">已使用</span>')+'</td><td>'+(c.created_at||'-')+'</td></tr>').join('');
+  document.getElementById('ags').innerHTML='<span>加载中...</span>';
+  try {
+    const r=await fetch(B+'/api/agent/info',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu})});
+    const d=await r.json();
+    if(d.success){
+      document.getElementById('ags').innerHTML='<span>总配额: <span class="num">'+d.quota+'</span></span><span>已生成: <span class="num">'+d.used+'</span></span><span>剩余: <span class="num">'+d.remaining+'</span></span>';
+      document.getElementById('awx2').value=d.wechat_id;
+    }
+  } catch(e) {}
+  try {
+    const r2=await fetch(B+'/api/agent/list_codes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,t:'all'})});
+    const d2=await r2.json();
+    if(d2.success){
+      document.getElementById('agl').innerHTML=d2.codes.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.status=='unused'?'<span class="tag tag-green">未使用</span>':'<span class="tag tag-gray">已使用</span>')+'</td><td>'+(c.created_at||'-')+'</td></tr>').join('');
+    }
+  } catch(e) {}
 }
 
 async function agGen(n){
