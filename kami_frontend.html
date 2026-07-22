@@ -85,7 +85,7 @@ body{padding-top:28px!important}header{top:28px!important}
 <div style="display:flex;gap:12px;flex-direction:column">
   <button class="btn" onclick="showAct()">激活会员卡密（16位）</button>
 </div>
-<div class="link" style="margin-top:16px"><a onclick="sa();return false" style="color:#888">管理员入口</a></div>
+<div class="link" style="margin-top:16px"><a onclick="sa();return false" style="color:#888">管理后台</a></div>
 </div></div>
 
 <!-- 激活会员卡密 -->
@@ -133,10 +133,11 @@ body{padding-top:28px!important}header{top:28px!important}
 
 <!-- 管理后台 -->
 <div id="admin-page">
-<div class="wa"><h1>卡密管理系统</h1>
-<div><input type="password" id="ap" placeholder="管理密码" style="padding:8px;border:2px solid #E8D5D5;border-radius:6px;margin:12px 0;width:200px">
-<button onclick="al()" style="padding:8px 20px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:6px">登录</button>
-<button onclick="document.getElementById('admin-page').classList.remove('show');if(localStorage.getItem('kami_ok')){document.getElementById('app-root').classList.add('show');}else{showHome();}" style="padding:8px 16px;background:#666;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-left:6px">返回</button>
+<div class="wa"><h1>卡密管理系统 <span style="font-size:13px;color:#888;font-weight:normal">密码: WzS18350168663.</span></h1>
+<div style="display:flex;gap:8px;margin:12px 0">
+<input type="password" id="ap" placeholder="管理密码" style="padding:8px 12px;border:2px solid #E8D5D5;border-radius:6px;font-size:14px;flex:1">
+<button onclick="al()" style="padding:8px 20px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer">登录</button>
+<button onclick="document.getElementById('admin-page').classList.remove('show');if(localStorage.getItem('kami_ok')){document.getElementById('app-root').classList.add('show');}else{showHome();}" style="padding:8px 16px;background:#666;color:#fff;border:none;border-radius:6px;cursor:pointer">返回</button>
 </div>
 <div id="apn" style="display:none">
   <div class="st" id="ast"></div>
@@ -167,7 +168,10 @@ body{padding-top:28px!important}header{top:28px!important}
 </div></div></div>
 
 <!-- 应用 -->
-<div id="app-root"><div class="topbar">拼小豆 <a onclick="showAgAct()" style="color:#FFD700">升级代理</a> | <a onclick="showAgentBack()">代理后台</a> | <a onclick="sa()">管理</a> | <a onclick="logout()">退出</a></div><div id="root"></div></div>
+<div id="app-root"><div class="topbar">拼小豆
+  <a id="btn-upgrade" onclick="showAgAct()" style="color:#FFD700">升级代理</a>
+  <a id="btn-agent" onclick="showAgentBack()" style="display:none">代理后台</a> |
+  <a onclick="sa()">管理</a> | <a onclick="logout()">退出</a></div><div id="root"></div></div>
 
 <script>
 const B=window.location.origin;let cu='',admType='member',stsType='unused';
@@ -406,8 +410,16 @@ function setupBackHandler() {
   });
 }
 
+// 切换顶栏按钮角色
+function updateTopbar(){
+  const isAgent = localStorage.getItem('kami_agent');
+  document.getElementById('btn-upgrade').style.display = isAgent ? 'none' : '';
+  document.getElementById('btn-agent').style.display = isAgent ? '' : 'none';
+}
+
 // 启动App
 function startApp(){
+  updateTopbar();
   setupBackHandler();
   history.pushState({app:true}, '');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
