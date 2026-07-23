@@ -1,381 +1,250 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>拼小豆</title>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>拼小豆 · 拼豆图纸生成器</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;700;900&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
 <link rel="stylesheet" crossorigin href="https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-B-8XW312.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,'Microsoft YaHei',sans-serif;background:#FFF8F8;min-height:100vh}
-.pg{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;display:none;align-items:center;justify-content:center;background:linear-gradient(135deg,#8B0000,#4A0000)}
+:root{--bg:#faf6f2;--surface:#fff;--primary:#b33a2a;--primary-dark:#8a2a1e;--sec:#d4a017;--sec-l:#f0cf6a;--text:#2d1b14;--ts:#7a6054;--tm:#b8a69c;--br:#e8ddd6;--r:16px;--f:'Noto Sans SC',sans-serif;--fd:'ZCOOL KuaiLe',cursive}
+*{margin:0;padding:0;box-sizing:border-box}html{font-size:16px}
+body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
+.pg{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;background:var(--bg);overflow-y:auto;padding:16px}
 .pg.show{display:flex}
-.bx{background:#fff;border-radius:16px;padding:32px;width:420px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
-.bx h1{color:#8B0000;font-size:24px;margin-bottom:4px}
-.bx .sb{color:#888;font-size:13px;margin-bottom:16px}
-.bx input{width:100%;padding:11px 14px;border:2px solid #E8D5D5;border-radius:8px;font-size:15px;outline:none;margin-bottom:10px}
-.bx input:focus{border-color:#8B0000}
-.bx .btn{width:100%;padding:11px;background:#8B0000;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;margin-bottom:8px}
-.bx .btn:hover{background:#CC0000}.bx .btn:disabled{background:#ccc;cursor:not-allowed}
-.bx .msg{margin:8px 0;font-size:14px;min-height:22px}.ok{color:#28a745}.er{color:#dc3545}
-.bx .lk{color:#888;font-size:13px;margin-top:12px}.bx .lk a{color:#D4A017;font-weight:bold;cursor:pointer}
-.tg{display:inline-block;padding:2px 10px;border-radius:4px;font-size:12px;font-weight:bold}
-.tgg{background:#e8f5e9;color:#2e7d32}.tgo{background:#fff8e1;color:#f57f17}.tgg2{background:#f5f5f5;color:#888}
-#adm-pg{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99998;display:none;background:#FFF8F8;overflow-y:auto;padding:16px}
-#adm-pg.show{display:block}
-.wa{max-width:960px;margin:0 auto;background:#fff;border-radius:12px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
-.wa h2{color:#8B0000;margin-bottom:12px;font-size:20px}
-.wa table{width:100%;border-collapse:collapse;font-size:12.5px}
-.wa td,.wa th{padding:5px 6px;border-bottom:1px solid #eee;text-align:left}
-.wa th{background:#f5f5f5;position:sticky;top:0;font-weight:600}
-.tls{display:flex;gap:6px;margin:12px 0;flex-wrap:wrap;align-items:center}
-.tls button{padding:7px 14px;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12.5px}
-.tls .rd{background:#8B0000}.tls .gd{background:#D4A017;color:#333}.tls .gy{background:#666}
-.st{display:flex;gap:10px;margin:8px 0;font-size:12.5px;flex-wrap:wrap}
-.st span{background:#f5f5f5;padding:4px 10px;border-radius:4px}
-.tb{display:flex;gap:0;margin:8px 0;border-bottom:1px solid #eee}
-.tb span{padding:6px 16px;cursor:pointer;border-bottom:2px solid transparent;font-size:13px}
-.tb .on{border-bottom-color:#8B0000;color:#8B0000;font-weight:bold}
-.kc{font-family:monospace;font-size:15px;letter-spacing:2px;color:#8B0000;font-weight:bold;cursor:pointer;padding:5px;background:#fff8f8;border-radius:4px;display:inline-block}
-#ag-pg{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99997;display:none;background:#FFF8F8;overflow-y:auto;padding:16px}
-#ag-pg.show{display:block}
-.abx{max-width:700px;margin:0 auto}
-.ahd{background:linear-gradient(135deg,#D4A017,#f57f17);color:#fff;padding:20px;border-radius:12px 12px 0 0}
-.abd{background:#fff;padding:20px;border-radius:0 0 12px 12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
-.abd .sr{display:flex;gap:12px;margin:10px 0;flex-wrap:wrap}
-.abd .sr span{background:#f5f5f5;padding:6px 14px;border-radius:6px;font-size:14px}
-.abd .sr .nm{font-size:22px;font-weight:bold;color:#8B0000}
-.gp{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:24px;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.3);z-index:99999;max-width:90vw;max-height:80vh;overflow-y:auto;min-width:320px}
-.gp h3{color:#8B0000;margin-bottom:10px}
-.gp .cr{display:flex;align-items:center;gap:8px;padding:5px 8px;background:#f9f5f5;border-radius:6px;margin-bottom:3px}
-.gp .cr .ct{font-family:monospace;font-size:14px;letter-spacing:2px;flex:1;color:#8B0000;font-weight:bold}
-.cp{display:inline-flex;padding:3px 10px;border:1px solid #8B0000;background:#fff;color:#8B0000;border-radius:4px;cursor:pointer;font-size:12px}
-.cp:hover{background:#8B0000;color:#fff}.cp.done{background:#28a745;color:#fff;border-color:#28a745}
-.gp .cb2{width:100%;padding:10px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-top:8px}
-#app-r{display:none}#app-r.show{display:block}
-.tb2{position:fixed;top:0;left:0;right:0;z-index:99997;background:#8B0000;color:#fff;text-align:center;padding:4px 8px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
-.tb2 a{color:#D4A017;text-decoration:none;font-weight:bold;cursor:pointer}
-body{padding-top:26px!important}header{top:26px!important}
-.sel{width:100%;padding:10px;border:2px solid #E8D5D5;border-radius:8px;font-size:14px;outline:none;margin-bottom:10px;background:#fff}
-.lbl{font-size:13px;color:#666;text-align:left;margin-bottom:3px}
-.card-type-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}
-.card-type-opt{padding:10px;border:2px solid #E8D5D5;border-radius:8px;cursor:pointer;text-align:center;transition:all .2s;background:#fff}
-.card-type-opt:hover{border-color:#D4A017}
-.card-type-opt.sel{border-color:#8B0000;background:#fff0f0}
-.card-type-opt .ico{font-size:24px;margin-bottom:4px}
-.card-type-opt .nm2{font-size:14px;font-weight:bold;color:#333}
-.card-type-opt .ds{font-size:11px;color:#888;margin-top:2px}
+.cd{background:var(--surface);border-radius:var(--r);padding:clamp(28px,5vw,48px);width:min(440px,100%);box-shadow:0 12px 48px rgba(179,58,42,.12);text-align:center;animation:ci .5s ease}
+@keyframes ci{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+.cd::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--primary),var(--sec),var(--primary))}
+.cd .lg{font-family:var(--fd);font-size:clamp(28px,6vw,36px);color:var(--primary);margin-bottom:2px}
+.cd .sb{color:var(--ts);font-size:clamp(13px,3vw,14px);margin-bottom:clamp(16px,3vw,24px);font-weight:300}
+.cd input{width:100%;padding:clamp(10px,2.5vw,13px) clamp(12px,3vw,16px);border:2px solid var(--br);border-radius:10px;font-size:clamp(14px,3.5vw,16px);outline:none;margin-bottom:10px;transition:border-color .3s;background:var(--bg);font-family:var(--f)}
+.cd input:focus{border-color:var(--primary)}
+.cd .btn{width:100%;padding:clamp(11px,2.5vw,14px);background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:clamp(14px,3.5vw,16px);cursor:pointer;transition:all .3s;font-weight:500;font-family:var(--f);margin-bottom:8px}
+.cd .btn:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.cd .btn:disabled{background:#ccc;cursor:not-allowed}
+.cd .btn.gd{background:var(--sec);color:var(--text)}
+.cd .btn.gd:hover{background:#c4900e}
+.cd .msg{margin:8px 0;font-size:14px;min-height:22px;font-weight:500}.ok{color:#2e7d32}.er{color:#dc3545}
+.cd .lk{color:var(--tm);font-size:13px;margin-top:14px}
+.cd .lk a{color:var(--primary);font-weight:500;cursor:pointer;text-decoration:underline}
+.tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:500}
+.tg{background:#e8f5e9;color:#2e7d32}.to{background:#fff8e1;color:#f57f17}.tr{background:#f5f5f5;color:#888}
+#ap{position:fixed;inset:0;z-index:99998;display:none;background:var(--bg);overflow-y:auto;padding:16px}
+#ap.show{display:block}
+.wa{max-width:960px;margin:0 auto;background:var(--surface);border-radius:var(--r);padding:clamp(16px,3vw,28px);box-shadow:0 4px 24px rgba(179,58,42,.08)}
+.wa h2{color:var(--primary);font-size:clamp(18px,4vw,22px);margin-bottom:12px}
+.wa table{width:100%;border-collapse:collapse;font-size:clamp(11px,2.5vw,13px)}
+.wa td,.wa th{padding:5px;border-bottom:1px solid var(--br);text-align:left}
+.wa th{background:var(--bg);font-weight:600;color:var(--ts)}
+.tls{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;align-items:center}
+.tls button{padding:7px 14px;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:clamp(12px,2.5vw,13px)}
+.tls .rd{background:var(--primary)}.tls .gd{background:var(--sec);color:var(--text)}.tls .gy{background:#999}
+#agp{position:fixed;inset:0;z-index:99997;display:none;background:var(--bg);overflow-y:auto;padding:16px}
+#agp.show{display:block}
+.ax{max-width:700px;margin:0 auto}
+.ah{background:linear-gradient(135deg,var(--sec),#c4900e);color:#fff;padding:clamp(16px,3vw,24px);border-radius:var(--r) var(--r) 0 0}
+.ab{background:var(--surface);padding:clamp(16px,3vw,24px);border-radius:0 0 var(--r) var(--r)}
+.gp{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surface);padding:clamp(20px,4vw,28px);border-radius:var(--r);box-shadow:0 12px 48px rgba(0,0,0,.2);z-index:99999;max-width:min(440px,92vw);max-height:80dvh;overflow-y:auto;width:100%;animation:ci .3s ease}
+.gp h3{color:var(--primary);margin-bottom:12px}
+.gp .cr{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border-radius:8px;margin-bottom:4px}
+.gp .cr .ct{font-family:monospace;font-size:clamp(13px,3vw,15px);letter-spacing:2px;flex:1;color:var(--primary);font-weight:700}
+.cp{padding:4px 12px;border:1.5px solid var(--primary);background:var(--surface);color:var(--primary);border-radius:6px;cursor:pointer;font-size:12px;transition:all .2s}
+.cp:hover{background:var(--primary);color:#fff}.cp.d{background:#2e7d32;color:#fff;border-color:#2e7d32}
+.gp .cb2{width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;margin-top:10px;font-size:14px}
+.tb2{position:fixed;top:0;left:0;right:0;z-index:99996;background:var(--primary);color:#fff;padding:6px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.tb2 .ls{font-family:var(--fd);font-size:14px;margin-right:4px}
+.tb2 a{color:var(--sec-l);cursor:pointer;white-space:nowrap}
+body{padding-top:32px!important}header{top:32px!important}
+.gv{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px}
+.gv.s{display:flex}
+.gb{background:var(--surface);border-radius:var(--r);padding:clamp(20px,4vw,36px);width:min(520px,100%);max-height:85dvh;overflow-y:auto;animation:ci .4s ease;position:relative}
+.gb .cx{position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:var(--tm);background:none;border:none}
+.gb h2{color:var(--primary);font-family:var(--fd);font-size:clamp(22px,5vw,28px);margin-bottom:20px;text-align:center}
+.gs{display:flex;flex-direction:column;gap:14px}
+.gi{display:flex;gap:14px;align-items:flex-start;padding:14px;background:var(--bg);border-radius:10px}
+.gi:hover{transform:translateX(4px);transition:all .3s}
+.gi .n{width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.gi .bc{flex:1}
+.gi .bc h4{font-size:15px;color:var(--text);margin-bottom:2px}
+.gi .bc p{font-size:13px;color:var(--ts);line-height:1.5}
+.gi .bc .cdm{font-family:monospace;background:var(--surface);padding:4px 8px;border-radius:4px;font-size:13px;color:var(--primary);font-weight:700;display:inline-block;margin-top:4px;letter-spacing:2px}
+.gb .sb2{width:100%;padding:12px;margin-top:20px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:16px;cursor:pointer;font-family:var(--f);font-weight:500}
+.gb .sb2:hover{background:var(--primary-dark)}
+@media(max-width:480px){
+  .cd{padding:24px 20px;border-radius:12px}.cd input{font-size:16px}.cd .btn{font-size:15px;padding:13px}
+  .tls button{font-size:11px;padding:6px 10px}.wa table{font-size:11px}.wa td,.wa th{padding:4px}
+  .gp .cr .ct{font-size:12px}.gi{padding:12px}.gi .n{width:28px;height:28px;font-size:12px}
+}
 </style></head>
 <body>
+<div class="gv s" id="gv"><div class="gb"><button class="cx" onclick="cg()">&times;</button>
+<h2>🎯 拼小豆使用指南</h2>
+<div class="gs">
+<div class="gi"><div class="n">1</div><div class="bc"><h4>注册账号</h4><p>创建一个账号，管理你的会员状态</p></div></div>
+<div class="gi"><div class="n">2</div><div class="bc"><h4>获取卡密</h4><p>从管理员或代理那里获取16位会员卡密</p><span class="cdm">XXXX XXXX XXXX XXXX</span></div></div>
+<div class="gi"><div class="n">3</div><div class="bc"><h4>激活会员</h4><p>登录后输入卡密激活，即可使用全部功能</p></div></div>
+<div class="gi"><div class="n">4</div><div class="bc"><h4>开始使用</h4><p>激活后即可使用拼豆图纸生成功能 🎨</p></div></div>
+<div class="gi"><div class="n">⭐</div><div class="bc"><h4>升级代理</h4><p>输入12位代理卡密+微信号，可生成卡密分发给他人</p><span class="cdm">XXXX XXXX XXXX</span></div></div></div>
+<button class="sb2" onclick="cg()">开始使用 🚀</button></div></div>
 
-<div class="pg show" id="pg-r">
-<div class="bx"><h1>拼小豆</h1><div class="sb">注册账号</div>
-<input type="text" id="r_u" placeholder="用户名"><input type="password" id="r_p" placeholder="密码（至少6位）">
-<button class="btn" id="r_b" onclick="rg()">注册</button><div class="msg" id="r_m"></div>
-<div class="lk">已有账号？<a onclick="shL()">去登录</a></div></div></div>
+<div class="pg show" id="pgr"><div class="cd"><div class="lg">拼小豆</div><div class="sb">注册账号，开启拼豆之旅</div>
+<input type="text" id="ru" placeholder="用户名"><input type="password" id="rp" placeholder="密码（至少6位）">
+<button class="btn" id="rb" onclick="rg()">注册</button><div class="msg" id="rm"></div>
+<div class="lk">已有账号？<a onclick="sl()">去登录</a> · <a onclick="sg()">使用指南</a></div></div></div>
 
-<div class="pg" id="pg-l">
-<div class="bx"><h1>拼小豆</h1><div class="sb">登录账号</div>
-<input type="text" id="l_u" placeholder="用户名"><input type="password" id="l_p" placeholder="密码">
-<button class="btn" id="l_b" onclick="li()">登录</button><div class="msg" id="l_m"></div>
-<div class="lk">没有账号？<a onclick="shR()">去注册</a></div></div></div>
+<div class="pg" id="pgl"><div class="cd"><div class="lg">拼小豆</div><div class="sb">欢迎回来</div>
+<input type="text" id="lu" placeholder="用户名"><input type="password" id="lp" placeholder="密码">
+<button class="btn" id="lb" onclick="li()">登录</button><div class="msg" id="lm"></div>
+<div class="lk">没有账号？<a onclick="sr()">去注册</a></div></div></div>
 
-<div class="pg" id="pg-h">
-<div class="bx"><h1>拼小豆</h1><div class="sb" id="hw">欢迎！</div>
-<button class="btn" onclick="shA()">激活会员卡密</button>
-<div class="lk" style="margin-top:14px"><a onclick="adS()" style="color:#888">管理后台</a></div></div></div>
+<div class="pg" id="pgh"><div class="cd"><div class="lg">拼小豆</div><div class="sb" id="hw">欢迎！</div>
+<button class="btn" onclick="sa()">🎨 激活会员卡密</button>
+<button class="btn gd" onclick="sg()">📖 使用指南</button>
+<div class="lk"><a onclick="ads()" style="color:var(--tm)">管理后台</a></div></div></div>
 
-<div class="pg" id="pg-a">
-<div class="bx"><h1>激活会员</h1><div class="sb">请输入16位卡密</div>
-<input type="text" id="a_kc" maxlength="16" placeholder="16位卡密" oninput="this.value=this.value.toUpperCase()">
-<button class="btn" id="a_b" onclick="ac()">激活</button><div class="msg" id="a_m"></div>
-<div class="lk"><a onclick="bTA()">返回</a></div></div></div>
+<div class="pg" id="pga"><div class="cd"><div class="lg">🎨</div><div class="sb">输入16位会员卡密</div>
+<input type="text" id="akc" maxlength="16" placeholder="16位卡密" oninput="this.value=this.value.toUpperCase()">
+<button class="btn" id="ab" onclick="ac()">激活</button><div class="msg" id="am"></div>
+<div class="lk"><a onclick="bta()">返回</a></div></div></div>
 
-<div class="pg" id="pg-aa">
-<div class="bx"><h1>升级代理</h1><div class="sb">请输入12位代理卡密</div>
-<input type="text" id="aa_kc" maxlength="12" placeholder="12位代理卡密" oninput="this.value=this.value.toUpperCase()">
-<input type="text" id="aa_wx" placeholder="微信号"><button class="btn" id="aa_b" onclick="aa()" style="background:#D4A017;color:#333">升级代理</button>
-<div class="msg" id="aa_m"></div><div class="lk"><a onclick="bTA()">返回</a></div></div></div>
+<div class="pg" id="pgaa"><div class="cd"><div class="lg">⭐</div><div class="sb">升级代理 · 输入12位代理卡密</div>
+<input type="text" id="aakc" maxlength="12" placeholder="12位代理卡密" oninput="this.value=this.value.toUpperCase()">
+<input type="text" id="aawx" placeholder="微信号（用户可见）">
+<button class="btn gd" id="aab" onclick="aa()">升级代理</button><div class="msg" id="aam"></div>
+<div class="lk"><a onclick="bta()">返回</a></div></div></div>
 
-<div id="ag-pg">
-<div class="abx"><div class="ahd"><h2>代理后台</h2><p style="opacity:.9;font-size:13px">生成会员卡密</p>
-<a onclick="gB()" style="color:#fff;text-decoration:underline;cursor:pointer;font-size:12px">← 返回</a></div>
-<div class="abd">
-<div id="ag_d" style="display:none">
-<div class="sr" id="ag_s"></div>
-<div class="tls"><button class="gd" onclick="agG(1)">1张</button><button class="gd" onclick="agG(5)">5张</button><button class="gd" onclick="agG(10)">10张</button>
-<button class="gy" onclick="agR()">刷新</button></div>
-<div style="max-height:300px;overflow-y:auto"><table><thead><tr><th>卡密(16位永久)</th><th>状态</th><th>生成时间</th></tr></thead>
-<tbody id="ag_l"></tbody></table></div></div>
-<div id="ag_n" style="padding:20px;text-align:center;color:#888">未激活代理卡密</div></div></div></div>
+<div id="agp"><div class="ax"><div class="ah"><h2>⭐ 代理后台</h2><p style="opacity:.9;font-size:13px">生成会员卡密 · 配置客服微信</p><a onclick="gb()" style="color:#fff;text-decoration:underline;cursor:pointer;font-size:12px">← 返回</a></div>
+<div class="ab"><div id="agd" style="display:none">
+<div class="tls" style="justify-content:center;gap:12px" id="ags"></div>
+<div class="tls"><button class="gd" onclick="agg(1)">生成1张</button><button class="gd" onclick="agg(5)">5张</button><button class="gd" onclick="agg(10)">10张</button><button class="gy" onclick="agr()">刷新</button></div>
+<div style="max-height:300px;overflow-y:auto"><table><thead><tr><th>卡密</th><th>状态</th><th>时间</th></tr></thead><tbody id="agl"></tbody></table></div>
+<div style="margin-top:16px;display:flex;gap:8px"><input type="text" id="awx" placeholder="设置客服微信" style="flex:1;padding:8px 12px;border:2px solid var(--br);border-radius:8px;font-size:13px">
+<button onclick="swx()" style="padding:8px 16px;background:var(--sec);color:var(--text);border:none;border-radius:8px;cursor:pointer;font-size:12px">保存</button></div></div>
+<div id="agn" style="padding:30px;text-align:center;color:var(--tm)">未激活代理卡密</div></div></div></div>
 
-<div id="adm-pg">
-<div class="wa"><h2>卡密管理</h2>
-<div style="display:flex;gap:6px;margin:8px 0"><input type="password" id="ad_pw" placeholder="管理密码" style="padding:7px 10px;border:2px solid #E8D5D5;border-radius:6px;font-size:13px;flex:1">
-<button onclick="adL()" style="padding:7px 16px;background:#8B0000;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">登录</button>
-<button onclick="document.getElementById('adm-pg').classList.remove('show');bTA()" style="padding:7px 12px;background:#666;color:#fff;border:none;border-radius:6px;cursor:pointer">返回</button></div>
-<div id="ad_pn" style="display:none">
-<div class="st" id="ad_st"></div>
-<div class="tb" id="ad_tb1">
-<span class="on" onclick="swTB(this,'member')">会员卡密</span>
-<span onclick="swTB(this,'agent')">代理卡密</span>
-<span onclick="swTB(this,'all')">全部</span></div>
-<div class="tls" id="ad_btns">
-  <span style="font-size:12px;color:#888;margin-right:4px">生成:</span>
-  <span id="gen_m_btns">
-    <button class="rd" onclick="adG(1,'m_1d')">1天线</button>
-    <button class="rd" onclick="adG(1,'m_7d')">7天线</button>
-    <button class="rd" onclick="adG(1,'m_perm')">永久</button>
-    <button class="gd" onclick="adG(5,'m_1d')">×5</button>
-    <button class="gd" onclick="adG(5,'m_7d')">×5</button>
-    <button class="gd" onclick="adG(5,'m_perm')">×5</button>
-  </span>
-  <span id="gen_a_btns" style="display:none">
-    <button class="rd" onclick="adG(1,'a_1d')">1天(配额10)</button>
-    <button class="rd" onclick="adG(1,'a_7d')">7天(配额50)</button>
-    <button class="rd" onclick="adG(1,'a_perm')">永久(配额999)</button>
-    <button class="gd" onclick="adG(5,'a_1d')">×5</button>
-    <button class="gd" onclick="adG(5,'a_7d')">×5</button>
-    <button class="gd" onclick="adG(5,'a_perm')">×5</button>
-  </span>
-  <button class="gy" onclick="adR()">刷新</button>
-  <button class="gy" onclick="shUs()">用户</button>
-</div>
-<div class="tb" id="ad_tb2"><span class="on" onclick="swTB2(this,'unused')">未使用</span><span onclick="swTB2(this,'used')">已使用</span></div>
-<div style="max-height:350px;overflow-y:auto"><table><thead><tr><th>卡密</th><th>类型</th><th>状态</th><th>生成时间</th><th>来源/使用</th><th>使用时间</th><th>操作</th></tr></thead>
-<tbody id="ad_lb"></tbody></table></div>
-<div id="us_lb" style="display:none;margin-top:16px"><h3 style="color:#8B0000;font-size:16px">注册用户</h3>
-<table><thead><tr><th>用户名</th><th>注册时间</th><th>会员</th><th>到期</th><th>代理</th><th>配额</th><th>微信</th></tr></thead>
-<tbody id="us_tb"></tbody></table></div></div></div></div>
+<div id="ap"><div class="wa"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+<h2>📊 卡密管理</h2><button onclick="document.getElementById('ap').classList.remove('show');bta()" style="padding:6px 14px;background:var(--bg);color:var(--ts);border:1px solid var(--br);border-radius:8px;cursor:pointer;font-size:12px">返回</button></div>
+<input type="password" id="adpw" placeholder="管理密码" style="padding:8px 12px;border:2px solid var(--br);border-radius:8px;font-size:13px;width:200px">
+<button onclick="adl()" style="padding:8px 16px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;margin-left:6px">登录</button>
+<div id="adpn" style="display:none">
+<div class="tls" style="justify-content:center;gap:10px;margin:12px 0" id="adst"></div>
+<div style="display:flex;gap:4px;margin:12px 0;border-bottom:2px solid var(--br)">
+<span class="at on" onclick="swt(this,'member')">会员</span><span class="at" onclick="swt(this,'agent')">代理</span><span class="at" onclick="swt(this,'all')">全部</span></div>
+<div class="tls"><span style="font-size:12px;color:var(--ts);margin-right:4px">生成:</span>
+<span id="gm"><button class="rd" onclick="adg(1,'m_1d')">1天</button><button class="rd" onclick="adg(1,'m_7d')">7天</button><button class="rd" onclick="adg(1,'m_perm')">永久</button><button class="gd" onclick="adg(5,'m_1d')">×5</button><button class="gd" onclick="adg(5,'m_7d')">×5</button><button class="gd" onclick="adg(5,'m_perm')">×5</button></span>
+<span id="ga" style="display:none"><button class="rd" onclick="adg(1,'a_1d')">天(10)</button><button class="rd" onclick="adg(1,'a_7d')">周(50)</button><button class="rd" onclick="adg(1,'a_perm')">永久(999)</button><button class="gd" onclick="adg(5,'a_1d')">×5</button><button class="gd" onclick="adg(5,'a_7d')">×5</button><button class="gd" onclick="adg(5,'a_perm')">×5</button></span>
+<button class="gy" onclick="adr()">刷新</button><button class="gy" onclick="su()">用户</button></div>
+<div style="display:flex;gap:4px;margin:12px 0;border-bottom:2px solid var(--br)">
+<span class="st2 on" onclick="swt2(this,'unused')">未使用</span><span class="st2" onclick="swt2(this,'used')">已使用</span></div>
+<div style="max-height:350px;overflow-y:auto"><table><thead><tr><th>卡密</th><th>类型</th><th>状态</th><th>生成</th><th>来源/使用</th><th>时间</th><th></th></tr></thead><tbody id="adlb"></tbody></table></div>
+<div id="uslb" style="display:none;margin-top:16px"><h3 style="color:var(--primary);font-size:16px;margin-bottom:8px">👤 注册用户</h3>
+<div style="max-height:300px;overflow-y:auto"><table><thead><tr><th>用户名</th><th>注册</th><th>会员</th><th>到期</th><th>代理</th><th>配额</th><th>微信</th></tr></thead><tbody id="ustb"></tbody></table></div></div></div></div></div>
 
-<div id="app-r"><div class="tb2">拼小豆
-<a id="btn-up" onclick="shAA()">升级代理</a><a id="btn-ag" onclick="agS()" style="display:none">代理后台</a>
-<a onclick="adS()">管理</a><a onclick="lo()">退出</a></div><div id="root"></div></div>
+<div id="appr"><div class="tb2"><span class="ls">拼小豆</span>
+<a id="bup" onclick="shaa()">⭐升级代理</a><a id="bag" onclick="ags()" style="display:none">⭐代理后台</a>
+<a onclick="sg()">📖指南</a><a onclick="ads()">⚙️管理</a><a onclick="lo()">🚪退出</a></div><div id="root"></div></div>
 
 <script>
-const B=window.location.origin;let cu='',aT='member',sT='unused';
-
-function shR(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('pg-r').classList.add('show')}
-function shL(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('pg-l').classList.add('show')}
-function shH(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('pg-h').classList.add('show')}
-function shA(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('pg-a').classList.add('show');document.getElementById('a_m').textContent=''}
-function shAA(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('app-r').classList.remove('show');document.getElementById('pg-aa').classList.add('show');document.getElementById('aa_m').textContent=''}
-
+const B=location.origin;let cu='',aT='member',sT='unused';
+function sg(){document.getElementById('gv').classList.add('s')}
+function cg(){document.getElementById('gv').classList.remove('s');if(!localStorage.getItem('kami_user')&&!document.querySelector('.pg.show'))sr()}
+function sr(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('pgr').classList.add('show')}
+function sl(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('pgl').classList.add('show')}
+function shh(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('pgh').classList.add('show')}
+function sa(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('pga').classList.add('show');document.getElementById('am').textContent=''}
+function shaa(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('appr').classList.remove('show');document.getElementById('pgaa').classList.add('show');document.getElementById('aam').textContent=''}
 async function rg(){
-  const u=document.getElementById('r_u').value.trim(),p=document.getElementById('r_p').value,m=document.getElementById('r_m'),b=document.getElementById('r_b');
+  const u=document.getElementById('ru').value.trim(),p=document.getElementById('rp').value,m=document.getElementById('rm'),b=document.getElementById('rb');
   if(!u||!p){m.className='msg er';m.textContent='请填写完整';return}
   if(p.length<6){m.className='msg er';m.textContent='密码至少6位';return}
   b.disabled=1;b.textContent='注册中...';
-  try{const r=await fetch(B+'/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
-  const d=await r.json();
-  if(d.s){m.className='msg ok';m.textContent='注册成功';setTimeout(shL,500)}
-  else{m.className='msg er';m.textContent=d.m;b.disabled=0;b.textContent='注册'}
+  try{const r=await fetch(B+'/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});const d=await r.json();
+  if(d.s){m.className='msg ok';m.textContent='注册成功 🎉';setTimeout(sl,600)}else{m.className='msg er';m.textContent=d.m;b.disabled=0;b.textContent='注册'}
   }catch(e){m.className='msg er';m.textContent='网络错误';b.disabled=0;b.textContent='注册'}
 }
-
 async function li(){
-  const u=document.getElementById('l_u').value.trim(),p=document.getElementById('l_p').value,m=document.getElementById('l_m'),b=document.getElementById('l_b');
+  const u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value,m=document.getElementById('lm'),b=document.getElementById('lb');
   if(!u||!p){m.className='msg er';m.textContent='请填写完整';return}
   b.disabled=1;b.textContent='登录中...';
-  try{
-    const r=await fetch(B+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
-    const d=await r.json();
-    if(d.s){
-      cu=u;localStorage.setItem('kami_user',u);
-      if(d.ia)localStorage.setItem('kami_agent','1');
-      const r2=await fetch(B+'/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});
-      const d2=await r2.json();
-      if(d2.act){localStorage.setItem('kami_ok','1');stA();}
-      else{document.getElementById('hw').textContent='欢迎，'+u;shH()}
-    }else{m.className='msg er';m.textContent=d.m;b.disabled=0;b.textContent='登录'}
+  try{const r=await fetch(B+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});const d=await r.json();
+  if(d.s){cu=u;localStorage.setItem('kami_user',u);if(d.ia)localStorage.setItem('kami_agent','1');
+    const r2=await fetch(B+'/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});const d2=await r2.json();
+    if(d2.act){localStorage.setItem('kami_ok','1');sta()}else{document.getElementById('hw').textContent='欢迎，'+u;shh()}
+  }else{m.className='msg er';m.textContent=d.m;b.disabled=0;b.textContent='登录'}
   }catch(e){m.className='msg er';m.textContent='网络错误';b.disabled=0;b.textContent='登录'}
 }
-
 async function ac(){
-  const c=document.getElementById('a_kc').value.trim(),m=document.getElementById('a_m'),b=document.getElementById('a_b');
+  const c=document.getElementById('akc').value.trim(),m=document.getElementById('am'),b=document.getElementById('ab');
   if(c.length<16){m.className='msg er';m.textContent='请输入16位卡密';return}
-  b.disabled=1;b.textContent='验证中...';
-  try{
-    const r=await fetch(B+'/api/activate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,code:c})});
-    const d=await r.json();
-    if(d.s){m.className='msg ok';m.textContent=d.m;localStorage.setItem('kami_ok','1');
-      try{const wx=await fetch(B+'/api/get_wx',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:c})});
-      const wd=await wx.json();if(wd.s)m.textContent+=' 客服微信:'+wd.wi}catch(e){}
-      setTimeout(stA,2000);
-    }else{m.className='msg er';m.textContent=d.m;b.disabled=0;b.textContent='激活'}
+  b.disabled=1;b.textContent='激活中...';
+  try{const r=await fetch(B+'/api/activate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,code:c})});const d=await r.json();
+  if(d.s){m.className='msg ok';m.textContent='✅ '+d.m;localStorage.setItem('kami_ok','1');
+    try{const wx=await fetch(B+'/api/get_agent_wechat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:c})});const wd=await wx.json();if(wd.s)m.textContent+=' 客服微信:'+wd.wi}catch(e){}
+    setTimeout(sta,1500)
+  }else{m.className='msg er';m.textContent=d.m;b.disabled=0;b.textContent='激活'}
   }catch(e){m.className='msg er';m.textContent='网络错误';b.disabled=0;b.textContent='激活'}
 }
-
 async function aa(){
-  const c=document.getElementById('aa_kc').value.trim(),w=document.getElementById('aa_wx').value.trim(),m=document.getElementById('aa_m'),b=document.getElementById('aa_b');
+  const c=document.getElementById('aakc').value.trim(),w=document.getElementById('aawx').value.trim(),m=document.getElementById('aam'),b=document.getElementById('aab');
   if(c.length<12){m.className='msg er';m.textContent='输入12位代理卡密';return}
   if(!w){m.className='msg er';m.textContent='输入微信号';return}
   b.disabled=1;b.textContent='升级中...';
-  try{
-    const r=await fetch(B+'/api/activate_agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,code:c,wechat_id:w})});
-    const d=await r.json();
-    if(d.s){m.className='msg ok';m.textContent='升级代理成功！配额'+d.aq;localStorage.setItem('kami_agent','1');
-      updateTB();setTimeout(()=>agS(),1000);
-    }else{m.className='msg er';m.textContent=d.m;b.disabled=0;b.textContent='升级代理'}
+  try{const r=await fetch(B+'/api/activate_agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,code:c,wechat_id:w})});const d=await r.json();
+  if(d.s){m.className='msg ok';m.textContent='升级代理成功，配额'+d.aq;localStorage.setItem('kami_agent','1');utb();setTimeout(()=>ags(),1000)}else{m.className='msg er';m.textContent=d.m;b.disabled=0;b.textContent='升级代理'}
   }catch(e){m.className='msg er';m.textContent='网络错误';b.disabled=0;b.textContent='升级代理'}
 }
-
-function updateTB(){
-  const ia=localStorage.getItem('kami_agent');
-  document.getElementById('btn-up').style.display=ia?'none':'';
-  document.getElementById('btn-ag').style.display=ia?'':'none';
-}
-
-function bTA(){
-  if(localStorage.getItem('kami_ok')){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('app-r').classList.add('show')}
-  else shH()
-}
-
-function gB(){
-  document.getElementById('ag-pg').classList.remove('show');
-  document.getElementById('app-r').classList.add('show');
-}
-
-// 启动App
-function stA(){
-  updateTB();
-  let bh=false;
-  window.addEventListener('popstate',function(e){if(document.getElementById('app-r')?.classList.contains('show')){history.pushState({a:1},'')}});
-  history.pushState({a:1},'');
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));
-  document.getElementById('app-r').classList.add('show');
+function utb(){const ia=localStorage.getItem('kami_agent');document.getElementById('bup').style.display=ia?'none':'';document.getElementById('bag').style.display=ia?'':'none'}
+function bta(){if(localStorage.getItem('kami_ok')){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('appr').classList.add('show')}else shh()}
+function gb(){document.getElementById('agp').classList.remove('show');document.getElementById('appr').classList.add('show')}
+function sta(){
+  utb();history.pushState({a:1},'');
+  window.addEventListener('popstate',function(e){if(document.getElementById('appr')?.classList.contains('show'))history.pushState({a:1},'')});
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('appr').classList.add('show');
   const of=window.fetch;window.fetch=function(){return of.apply(this,arguments).then(async r=>{
     const u=(typeof arguments[0]==='string'?arguments[0]:arguments[0]?.url)||'',ct=r.headers?.get?.('content-type')||'';
     if(!ct.includes('json'))return r;
     try{const j=JSON.parse(await r.clone().text());
-      if(u.includes('profiles')){(Array.isArray(j)?j:[j]).forEach(x=>{if(x&&typeof x==='object'){x.role='member';x.member_expires_at='2099-12-31T23:59:59Z';x.agent_quota=999}});return new Response(JSON.stringify(j),{status:200,headers:{'content-type':'application/json'}});}
-      if(u.includes('activate-card')||u.includes('functions')){return new Response(JSON.stringify({success:true}),{status:200,headers:{'content-type':'application/json'}});}
-      return new Response(JSON.stringify(j),{status:r.status,headers:r.headers});
-    }catch(e){return r;}
+      if(u.includes('profiles')){(Array.isArray(j)?j:[j]).forEach(x=>{if(x&&typeof x==='object'){x.role='member';x.member_expires_at='2099-12-31T23:59:59Z';x.agent_quota=999}});return new Response(JSON.stringify(j),{status:200,headers:{'content-type':'application/json'}})}
+      if(u.includes('activate-card')||u.includes('functions'))return new Response(JSON.stringify({success:true}),{status:200,headers:{'content-type':'application/json'}})
+      return new Response(JSON.stringify(j),{status:r.status,headers:r.headers})
+    }catch(e){return r}
   })};
   const s=document.createElement('script');s.type='module';s.crossOrigin='';s.src='https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-BUyD1zWX.js';
   document.getElementById('root').after(s);
 }
-
 function lo(){
   localStorage.removeItem('kami_ok');localStorage.removeItem('kami_agent');localStorage.removeItem('kami_user');
-  cu='';document.getElementById('app-r').classList.remove('show');document.getElementById('adm-pg').classList.remove('show');
-  document.getElementById('ag-pg').classList.remove('show');shL()
+  cu='';document.getElementById('appr').classList.remove('show');document.getElementById('ap').classList.remove('show');document.getElementById('agp').classList.remove('show');sl()
 }
-
-// ===== 代理后台 =====
-async function agS(){
-  if(localStorage.getItem('kami_agent')){
-    document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));
-    document.getElementById('app-r').classList.remove('show');
-    document.getElementById('ag-pg').classList.add('show');
-    document.getElementById('ag_n').style.display='none';document.getElementById('ag_d').style.display='block';
-    agR();return;
-  }
-  const r=await fetch(B+'/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu})});
-  const d=await r.json();
-  if(!d.ia){alert('您不是代理，请升级代理');return}
-  localStorage.setItem('kami_agent','1');
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));
-  document.getElementById('app-r').classList.remove('show');
-  document.getElementById('ag-pg').classList.add('show');
-  document.getElementById('ag_n').style.display='none';document.getElementById('ag_d').style.display='block';
-  agR();
+async function ags(){
+  if(localStorage.getItem('kami_agent')){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('appr').classList.remove('show');document.getElementById('agp').classList.add('show');document.getElementById('agn').style.display='none';document.getElementById('agd').style.display='block';agr();return}
+  const r=await fetch(B+'/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu})});const d=await r.json();
+  if(!d.ia){alert('不是代理，请升级代理');return}
+  localStorage.setItem('kami_agent','1');document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('appr').classList.remove('show');
+  document.getElementById('agp').classList.add('show');document.getElementById('agn').style.display='none';document.getElementById('agd').style.display='block';agr()
 }
-
-async function agR(){
-  try{
-    const r=await fetch(B+'/api/agent/info',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu})});
-    const d=await r.json();
-    if(d.s)document.getElementById('ag_s').innerHTML='<span>配额: <span class="nm">'+d.qa+'</span></span><span>已生成: <span class="nm">'+d.ud+'</span></span><span>剩余: <span class="nm">'+d.rm+'</span></span>';
-  }catch(e){}
-  try{
-    const r2=await fetch(B+'/api/agent/list',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,t:'all'})});
-    const d2=await r2.json();
-    if(d2.s)document.getElementById('ag_l').innerHTML=d2.cs.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.st=='unused'?'<span class="tg tgg">未使用</span>':'<span class="tg tgg2">已使用</span>')+'</td><td>'+(c.ca||'-')+'</td></tr>').join('');
-  }catch(e){}
+async function agr(){
+  try{const r=await fetch(B+'/api/agent/info',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu})});const d=await r.json();if(d.s)document.getElementById('ags').innerHTML='<span>📊 配额 <strong>'+d.qa+'</strong></span><span>✅ 已生成 <strong>'+d.ud+'</strong></span><span>📦 剩余 <strong>'+d.rm+'</strong></span>'}catch(e){}
+  try{const r2=await fetch(B+'/api/agent/list_codes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,t:'all'})});const d2=await r2.json();
+  if(d2.s)document.getElementById('agl').innerHTML=d2.cs.map(c=>'<tr><td><span class="kc" style="font-family:monospace;font-size:14px;letter-spacing:2px;color:var(--primary);font-weight:700;cursor:pointer;padding:4px;background:var(--bg);border-radius:4px;display:inline-block" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.st=='unused'?'<span class="tag tg">未使用</span>':'<span class="tag tr">已使用</span>')+'</td><td>'+(c.ca||'-')+'</td></tr>').join('')}catch(e){}
 }
-
-async function agG(n){
-  const r=await fetch(B+'/api/agent/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,count:n})});
-  const d=await r.json();
-  if(d.s){
-    let h='<div class="gp"><h3>已生成 '+d.c.length+' 张</h3>';
-    h+=d.cs.map(c=>'<div class="cr"><span class="ct">'+c+'</span><button class="cp" onclick="var t=this;navigator.clipboard.writeText(\''+c+'\').then(function(){t.textContent=\'已复制\';t.classList.add(\'done\');setTimeout(function(){t.textContent=\'复制\';t.classList.remove(\'done\')},2000)})">复制</button></div>').join('');
-    h+='<button class="cb2" onclick="this.parentElement.remove()">关闭</button></div>';
-    let dv=document.createElement('div');dv.innerHTML=h;document.body.appendChild(dv);agR();
-  }else alert(d.m);
+async function agg(n){
+  const r=await fetch(B+'/api/agent/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,count:n})});const d=await r.json();
+  if(d.s){let h='<div class="gp"><h3>✅ 已生成 '+d.c+' 张</h3>';h+=d.cs.map(c=>'<div class="cr"><span class="ct">'+c+'</span><button class="cp" onclick="var t=this;navigator.clipboard.writeText(\''+c+'\').then(function(){t.textContent=\'已复制\';t.classList.add(\'d\');setTimeout(function(){t.textContent=\'复制\';t.classList.remove(\'d\')},2000)})">复制</button></div>').join('');h+='<button class="cb2" onclick="this.parentElement.remove()">关闭</button></div>';let dv=document.createElement('div');dv.innerHTML=h;document.body.appendChild(dv);agr()}else alert(d.m)
 }
-
-// ===== 管理后台 =====
-function adS(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('adm-pg').classList.add('show')}
-function adL(){
-  fetch(B+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('ad_pw').value})})
-  .then(r=>r.json()).then(d=>{if(d.s){document.getElementById('ad_pn').style.display='block';adR()}else alert('密码错误')});
-}
-function swTB(el,t){aT=t;document.querySelectorAll('#ad_tb1 span').forEach(s=>s.classList.remove('on'));el.classList.add('on')
-  document.getElementById('gen_m_btns').style.display=t=='agent'?'none':'';document.getElementById('gen_a_btns').style.display=t=='agent'?'':'none';adR()
-}
-function swTB2(el,t){sT=t;document.querySelectorAll('#ad_tb2 span').forEach(s=>s.classList.remove('on'));el.classList.add('on');adR()}
-
-function adG(n,ct){
-  fetch(B+'/api/admin/gen',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pw:document.getElementById('ad_pw').value,ct:ct,n:n})})
-  .then(r=>r.json()).then(d=>{
-    if(d.s){
-      const labels={'m_1d':'会员1天','m_7d':'会员7天','m_perm':'会员永久','a_1d':'代理1天','a_7d':'代理7天','a_perm':'代理永久'};
-      let h='<div class="gp"><h3>已生成 '+d.c+' 张 '+labels[ct]+'</h3>';
-      h+=d.cs.map(c=>'<div class="cr"><span class="ct">'+c+'</span><button class="cp" onclick="var t=this;navigator.clipboard.writeText(\''+c+'\').then(function(){t.textContent=\'已复制\';t.classList.add(\'done\');setTimeout(function(){t.textContent=\'复制\';t.classList.remove(\'done\')},2000)})">复制</button></div>').join('');
-      h+='<button class="cb2" onclick="this.parentElement.remove()">关闭</button></div>';
-      let dv=document.createElement('div');dv.innerHTML=h;document.body.appendChild(dv);adR();
-    }else alert('生成失败');
-  });
-}
-
-function adR(){
-  fetch(B+'/api/admin/list?pw='+document.getElementById('ad_pw').value+'&t='+sT+'&tp='+aT)
-  .then(r=>r.json()).then(d=>{
-    if(!d.s)return;
-    const labels={'m_1d':'<span class="tg tgg">1天</span>','m_7d':'<span class="tg tgo">7天</span>','m_perm':'<span class="tg tgg">永久</span>',
-      'a_1d':'<span class="tg tgo">代1天</span>','a_7d':'<span class="tg tgo">代7天</span>','a_perm':'<span class="tg tgo">代永久</span>'};
-    document.getElementById('ad_lb').innerHTML=d.cs.map(c=>{
-      const lb=labels[c.ct]||c.ct;
-      return '<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+lb+'</td><td>'+(c.st=='unused'?'<span class="tg tgg">未使用</span>':'<span class="tg tgg2">已使用</span>')+'</td><td>'+(c.ca||'-')+'</td><td>'+(c.cb||'')+'/'+(c.ub||'')+'</td><td>'+(c.ua||'-')+'</td><td>'+(c.st=='unused'?'<button onclick="adD('+c.id+')" style="background:none;border:1px solid #999;color:#999;padding:2px 6px;border-radius:4px;cursor:pointer;font-size:11px">删</button>':'')+'</td></tr>'
-    }).join('');
-    document.getElementById('ad_st').innerHTML='<span>总计:'+d.st.tl+'</span><span>未用:'+d.st.ul+'</span><span>已用:'+d.st.sl+'</span>·<span style="color:#2e7d32">会:'+d.st.mc+'</span><span style="color:#f57f17">代:'+d.st.ac+'</span>';
-  });
-}
-
-function adD(id){
-  if(!confirm('确定删除？'))return;
-  fetch(B+'/api/admin/del',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pw:document.getElementById('ad_pw').value,id})})
-  .then(r=>r.json()).then(d=>{if(d.s)adR()});
-}
-
-function shUs(){
-  const ul=document.getElementById('us_lb');
-  if(ul.style.display==='none'){
-    fetch(B+'/api/admin/users?pw='+document.getElementById('ad_pw').value).then(r=>r.json()).then(d=>{
-      if(d.s){
-        document.getElementById('us_tb').innerHTML=d.us.map(u=>{
-          const mt={'m_1d':'1天','m_7d':'7天','m_perm':'永久'};
-          const mtl=mt[u.mt]||'-';
-          const es=u.me?u.me.slice(0,10):'-';
-          return '<tr><td>'+u.un+'</td><td>'+(u.ca||'-')+'</td><td>'+(u.kc?mtl:'-')+'</td><td>'+(u.kc?es:'-')+'</td><td>'+(u.ia?'<span class="tg tgo">代理</span>':'<span class="tg tgg2">否</span>')+'</td><td>'+(u.aq||'-')+'</td><td>'+(u.wi||'-')+'</td></tr>'
-        }).join('');
-        ul.style.display='block';
-      }
-    });
-  }else ul.style.display='none';
-}
-
-// 初始化
-(function(){
-  history.replaceState({p:'init'},'');
-  const u=localStorage.getItem('kami_user');
-  if(u){
-    cu=u;
-    if(localStorage.getItem('kami_ok')){stA();return}
-    fetch(B+'/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})})
-    .then(r=>r.json()).then(d=>{
-      if(d.act){localStorage.setItem('kami_ok','1');stA()}
-      else{document.getElementById('hw').textContent='欢迎，'+u;shH()}
-    }).catch(()=>{if(localStorage.getItem('kami_ok'))stA();else shL()});
-  }
-})();
+async function swx(){const w=document.getElementById('awx').value.trim();await fetch(B+'/api/agent/set_wechat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,wechat_id:w})});alert('已保存 ✅')}
+function ads(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('ap').classList.add('show')}
+function adl(){fetch(B+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('adpw').value})}).then(r=>r.json()).then(d=>{if(d.s){document.getElementById('adpn').style.display='block';adr()}else alert('密码错误')})}
+function swt(el,t){aT=t;document.querySelectorAll('.at').forEach(s=>s.classList.remove('on'));el.classList.add('on');document.getElementById('gm').style.display=t=='agent'?'none':'';document.getElementById('ga').style.display=t=='agent'?'':'none';adr()}
+function swt2(el,t){sT=t;document.querySelectorAll('.st2').forEach(s=>s.classList.remove('on'));el.classList.add('on');adr()}
+function adg(n,ct){fetch(B+'/api/admin/gen',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pw:document.getElementById('adpw').value,ct:ct,n:n})}).then(r=>r.json()).then(d=>{if(d.s){const lb={'m_1d':'会员1天','m_7d':'会员7天','m_perm':'会员永久','a_1d':'代理1天','a_7d':'代理7天','a_perm':'代理永久'};let h='<div class="gp"><h3>✅ 已生成 '+d.c+' 张 '+lb[ct]+'</h3>';h+=d.cs.map(c=>'<div class="cr"><span class="ct">'+c+'</span><button class="cp" onclick="var t=this;navigator.clipboard.writeText(\''+c+'\').then(function(){t.textContent=\'已复制\';t.classList.add(\'d\');setTimeout(function(){t.textContent=\'复制\';t.classList.remove(\'d\')},2000)})">复制</button></div>').join('');h+='<button class="cb2" onclick="this.parentElement.remove()">关闭</button></div>';let dv=document.createElement('div');dv.innerHTML=h;document.body.appendChild(dv);adr()}})}function adr(){fetch(B+'/api/admin/list?pw='+document.getElementById('adpw').value+'&t='+sT+'&tp='+aT).then(r=>r.json()).then(d=>{if(!d.s)return;const lb={'m_1d':'<span class="tag tg">1天</span>','m_7d':'<span class="tag to">7天</span>','m_perm':'<span class="tag tg">永久</span>','a_1d':'<span class="tag to">代1天</span>','a_7d':'<span class="tag to">代7天</span>','a_perm':'<span class="tag to">代永久</span>'};document.getElementById('adlb').innerHTML=d.cs.map(c=>{const lbl=lb[c.ct]||c.ct;return '<tr><td><span class="kc" style="font-family:monospace;font-size:13px;letter-spacing:1px;color:var(--primary);font-weight:700;cursor:pointer;padding:3px 6px;background:var(--bg);border-radius:4px;display:inline-block" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+lbl+'</td><td>'+(c.st=='unused'?'<span class="tag tg">未使用</span>':'<span class="tag tr">已使用</span>')+'</td><td>'+(c.ca||'-')+'</td><td>'+(c.cb||'')+'/'+(c.ub||'')+'</td><td>'+(c.ua||'-')+'</td><td>'+(c.st=='unused'?'<button onclick="add('+c.id+')" style="background:none;border:1px solid #999;color:#999;padding:2px 6px;border-radius:4px;cursor:pointer;font-size:11px">✕</button>':'')+'</td></tr>'}).join('');document.getElementById('adst').innerHTML='<span>📊 总计 <strong>'+d.st.tl+'</strong></span><span>🟢 未用 <strong>'+d.st.ul+'</strong></span><span>🔴 已用 <strong>'+d.st.sl+'</strong></span> · <span>🎫 会员 <strong>'+d.st.mc+'</strong></span><span>⭐ 代理 <strong>'+d.st.ac+'</strong></span>'})}
+function add(id){if(!confirm('删除？'))return;fetch(B+'/api/admin/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pw:document.getElementById('adpw').value,id})}).then(r=>r.json()).then(d=>{if(d.s)adr()})}
+function su(){const ul=document.getElementById('uslb');if(ul.style.display==='none'){fetch(B+'/api/admin/users?pw='+document.getElementById('adpw').value).then(r=>r.json()).then(d=>{if(d.s){document.getElementById('ustb').innerHTML=d.us.map(u=>{const mt={'1d':'1天','7d':'7天','perm':'永久'};const ml=mt[u.mt]||'-';const es=u.me?u.me.slice(0,10):'-';return '<tr><td>'+u.un+'</td><td>'+(u.ca||'-')+'</td><td>'+(u.kc?ml:'-')+'</td><td>'+(u.kc?es:'-')+'</td><td>'+(u.ia?'<span class="tag to">代理</span>':'<span class="tag tr">否</span>')+'</td><td>'+(u.aq||'-')+'</td><td>'+(u.wi||'-')+'</td></tr>'}).join('');ul.style.display='block'}})}else ul.style.display='none'}
+(function(){history.replaceState({p:'init'},'');
+setTimeout(()=>{if(!localStorage.getItem('kami_user'))sg()},1000);
+const u=localStorage.getItem('kami_user');if(u){cu=u;
+  if(localStorage.getItem('kami_ok')){sta();return}
+  fetch(B+'/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})}).then(r=>r.json()).then(d=>{if(d.act){localStorage.setItem('kami_ok','1');sta()}else{document.getElementById('hw').textContent='欢迎，'+u;shh()}}).catch(()=>{if(localStorage.getItem('kami_ok'))sta();else sl()})
+}})();
 </script></body></html>
