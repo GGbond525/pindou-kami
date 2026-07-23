@@ -173,14 +173,15 @@ def ad_ls():
     db=gd(); wt="" if tp=="all" else f"AND ct LIKE '{tp}%'"
     rs=fa(db,f"SELECT * FROM kc WHERE st='{tb}' {wt} ORDER BY id DESC LIMIT 500")
     def sc(s): r=fo(db,s); return r["c"] if r else 0
-    db.close()
-    return jsonify({"s":True,"cs":[dict(r) for r in rs],"st":{
+    st_data={
         "tl":sc("SELECT COUNT(*) as c FROM kc"),
         "ul":sc("SELECT COUNT(*) as c FROM kc WHERE st='unused'"),
         "sl":sc("SELECT COUNT(*) as c FROM kc WHERE st='used'"),
         "mc":sc("SELECT COUNT(*) as c FROM kc WHERE ct LIKE 'm%' AND st='unused'"),
         "ac":sc("SELECT COUNT(*) as c FROM kc WHERE ct LIKE 'a%' AND st='unused'")
-    }})
+    }
+    db.close()
+    return jsonify({"s":True,"cs":[dict(r) for r in rs],"st":st_data})
 
 @app.route('/api/admin/delete', methods=['POST'])
 def ad_dl():
