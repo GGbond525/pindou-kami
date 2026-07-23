@@ -52,10 +52,11 @@ body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100d
 .cp{padding:4px 12px;border:1.5px solid var(--primary);background:var(--surface);color:var(--primary);border-radius:6px;cursor:pointer;font-size:12px;transition:all .2s}
 .cp:hover{background:var(--primary);color:#fff}.cp.d{background:#2e7d32;color:#fff;border-color:#2e7d32}
 .gp .cb2{width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;margin-top:10px;font-size:14px}
-.tb2{position:fixed;top:0;left:0;right:0;z-index:99996;background:var(--primary);color:#fff;padding:2px 12px;font-size:11px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.12);height:22px}
-.tb2 .ls{font-family:var(--fd);font-size:12px;margin-right:4px;color:#ffe0d0}
-.tb2 a{color:var(--sec-l);cursor:pointer;white-space:nowrap;text-decoration:none;transition:opacity .2s}
-.tb2 a:hover{opacity:.7}
+.tb2{position:fixed;top:0;left:0;right:0;z-index:99996;background:transparent;color:var(--text);padding:2px 8px;font-size:11px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;height:26px;border-bottom:1px solid var(--br)}
+.tb2 .ls{font-family:var(--fd);font-size:13px;margin-right:8px;color:var(--primary);font-weight:700}
+.tb2 a{color:var(--ts);cursor:pointer;white-space:nowrap;text-decoration:none;padding:1px 10px;border-radius:4px;transition:all .2s;font-size:12px;line-height:20px}
+.tb2 a:hover{color:var(--text);background:var(--br)}
+.tb2 a.active{color:#fff;background:#333}
 .gv{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px}
 .gv.s{display:flex}
 .gb{background:var(--surface);border-radius:var(--r);padding:clamp(20px,4vw,36px);width:min(520px,100%);max-height:85dvh;overflow-y:auto;animation:ci .4s ease;position:relative}
@@ -154,11 +155,12 @@ body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100d
 <div style="max-height:300px;overflow-y:auto"><table><thead><tr><th>用户名</th><th>注册</th><th>会员</th><th>到期</th><th>代理</th><th>配额</th><th>微信</th></tr></thead><tbody id="ustb"></tbody></table></div></div></div></div></div>
 
 <div id="appr"><div class="tb2">
-<a id="bup" onclick="shaa()">⭐升级代理</a><a id="bag" onclick="ags()" style="display:none">⭐代理后台</a>
-<a onclick="ads()">⚙️管理</a><a onclick="sg()">📖指南</a><a onclick="lo()">🚪退出</a></div><div id="root"></div></div>
+<a id="bup" onclick="shaa();setActive(this)">⭐升级代理</a><a id="bag" onclick="ags();setActive(this)" style="display:none">⭐代理后台</a>
+<a onclick="ads();setActive(this)">⚙️管理</a><a onclick="sg();setActive(this)">📖指南</a><a onclick="lo();setActive(this)">🚪退出</a></div><div id="root"></div></div>
 
 <script>
 const B=location.origin;let cu='',aT='member',sT='unused';
+function setActive(el){document.querySelectorAll('.tb2 a').forEach(a=>a.classList.remove('active'));if(el)el.classList.add('active')}
 function sg(){document.getElementById('gv').classList.add('s')}
 function cg(){document.getElementById('gv').classList.remove('s');if(!localStorage.getItem('kami_user')&&!document.querySelector('.pg.show'))sr()}
 function sr(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('pgr').classList.add('show')}
