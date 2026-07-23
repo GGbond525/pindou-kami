@@ -290,7 +290,7 @@ async function agR(){
   try{
     const r2=await fetch(B+'/api/agent/list',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:cu,t:'all'})});
     const d2=await r2.json();
-    if(d2.s)document.getElementById('ag_l').innerHTML=d2.cs.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.cd+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.cd+'\'">'+c.cd+'</span></td><td>'+(c.st=='unused'?'<span class="tg tgg">未使用</span>':'<span class="tg tgg2">已使用</span>')+'</td><td>'+(c.ca||'-')+'</td></tr>').join('');
+    if(d2.s)document.getElementById('ag_l').innerHTML=d2.cs.map(c=>'<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+(c.st=='unused'?'<span class="tg tgg">未使用</span>':'<span class="tg tgg2">已使用</span>')+'</td><td>'+(c.ca||'-')+'</td></tr>').join('');
   }catch(e){}
 }
 
@@ -336,8 +336,8 @@ function adR(){
     const labels={'m_1d':'<span class="tg tgg">1天</span>','m_7d':'<span class="tg tgo">7天</span>','m_perm':'<span class="tg tgg">永久</span>',
       'a_1d':'<span class="tg tgo">代1天</span>','a_7d':'<span class="tg tgo">代7天</span>','a_perm':'<span class="tg tgo">代永久</span>'};
     document.getElementById('ad_lb').innerHTML=d.cs.map(c=>{
-      const lb=labels[c.cd]||c.cd;
-      return '<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.cd+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.cd+'\'">'+c.cd+'</span></td><td>'+lb+'</td><td>'+(c.st=='unused'?'<span class="tg tgg">未使用</span>':'<span class="tg tgg2">已使用</span>')+'</td><td>'+(c.ca||'-')+'</td><td>'+(c.cb||'')+'/'+(c.ub||'')+'</td><td>'+(c.ua||'-')+'</td><td>'+(c.st=='unused'?'<button onclick="adD('+c.id+')" style="background:none;border:1px solid #999;color:#999;padding:2px 6px;border-radius:4px;cursor:pointer;font-size:11px">删</button>':'')+'</td></tr>'
+      const lb=labels[c.ct]||c.ct;
+      return '<tr><td><span class="kc" onclick="navigator.clipboard.writeText(\''+c.code+'\');this.textContent=\'已复制\'" onmouseleave="this.textContent=\''+c.code+'\'">'+c.code+'</span></td><td>'+lb+'</td><td>'+(c.st=='unused'?'<span class="tg tgg">未使用</span>':'<span class="tg tgg2">已使用</span>')+'</td><td>'+(c.ca||'-')+'</td><td>'+(c.cb||'')+'/'+(c.ub||'')+'</td><td>'+(c.ua||'-')+'</td><td>'+(c.st=='unused'?'<button onclick="adD('+c.id+')" style="background:none;border:1px solid #999;color:#999;padding:2px 6px;border-radius:4px;cursor:pointer;font-size:11px">删</button>':'')+'</td></tr>'
     }).join('');
     document.getElementById('ad_st').innerHTML='<span>总计:'+d.st.tl+'</span><span>未用:'+d.st.ul+'</span><span>已用:'+d.st.sl+'</span>·<span style="color:#2e7d32">会:'+d.st.mc+'</span><span style="color:#f57f17">代:'+d.st.ac+'</span>';
   });
