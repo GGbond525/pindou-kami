@@ -217,6 +217,36 @@ function sta(){
   })};
   const s=document.createElement('script');s.type='module';s.crossOrigin='';s.src='https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-BUyD1zWX.js';
   document.getElementById('root').after(s);
+  // ===== 兼容性修复 =====
+  // 修复1: Canvas字体渲染 - 去掉900字重(PingFang/Microsoft YaHei 900在某些浏览器异常)
+  (function fixCanvasFont() {
+    const desc = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'font');
+    if (desc && desc.set) {
+      Object.defineProperty(CanvasRenderingContext2D.prototype, 'font', {
+        get: desc.get,
+        set: function(v) {
+          if (typeof v === 'string') {
+            v = v.replace(/\b900\b/g, '700').replace(/["']PingFang SC["'],?\s*/g, '');
+          }
+          desc.set.call(this, v);
+        }
+      });
+    }
+  })();
+  // 修复2: localStorage色号系统值强校验
+  try {
+    const cs = localStorage.getItem('perler_color_system');
+    if (cs && !['MARD','COCO','ManMan','PanPan','MiXiaoWo'].includes(cs)) {
+      localStorage.removeItem('perler_color_system');
+    }
+  } catch(e){}
+  // 修复3: 色斑预设值校验
+  try {
+    const pp = localStorage.getItem('perler_palette_preset');
+    if (pp && !['all','221','144','120','96','49'].includes(pp)) {
+      localStorage.removeItem('perler_palette_preset');
+    }
+  } catch(e){}
 }
 function lo(){
   localStorage.removeItem('kami_ok');localStorage.removeItem('kami_agent');localStorage.removeItem('kami_user');
