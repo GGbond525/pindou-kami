@@ -6,7 +6,6 @@
 <title>拼小豆</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;700;900&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
-<link rel="stylesheet" crossorigin href="https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-B-8XW312.css">
 <style>
 :root{--bg:#faf6f2;--surface:#fff;--primary:#b33a2a;--primary-dark:#8a2a1e;--sec:#d4a017;--sec-l:#f0cf6a;--text:#2d1b14;--ts:#7a6054;--tm:#b8a69c;--br:#e8ddd6;--r:16px;--f:'Noto Sans SC',sans-serif;--fd:'ZCOOL KuaiLe',cursive}
 *{margin:0;padding:0;box-sizing:border-box}html{font-size:16px}
@@ -226,6 +225,9 @@ function sta(){
       return new Response(JSON.stringify(j),{status:r.status,headers:r.headers})
     }catch(e){return r}
   })};
+  // 进入App时动态加载原版CSS，避免污染卡密系统页面
+  const appCSS=document.createElement('link');appCSS.rel='stylesheet';appCSS.crossOrigin='';appCSS.href='https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-B-8XW312.css';
+  document.head.appendChild(appCSS);
   const s=document.createElement('script');s.type='module';s.crossOrigin='';s.src='https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-BUyD1zWX.js';
   document.getElementById('root').after(s);
   // 兼容性修复
