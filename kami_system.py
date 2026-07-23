@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import flask, os, random, string, datetime, hashlib, sqlite3, re, time
+import flask, os, random, string, datetime, hashlib, re, time, sqlite3
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -20,6 +20,28 @@ def hide_headers(resp):
     return resp
 
 def gd():
+    db_url = os.environ.get("DATABASE_URL")
+    if db_url:
+        try:
+            import psycopg2, psycopg2.extras
+            c = psycopg2.connect(db_url)
+            c.autocommit = False
+            cu = c.cursor()
+            cu.execute("""CREATE TABLE IF NOT EXISTS kc (
+                id SERIAL PRIMARY KEY, code TEXT UNIQUE NOT NULL,
+                ct TEXT DEFAULT 'm', dr TEXT DEFAULT 'perm', dd INTEGER DEFAULT 99999,
+                ca TEXT, cb TEXT, ub TEXT, ua TEXT, st TEXT DEFAULT 'unused'
+            )""")
+            cu.execute("""CREATE TABLE IF NOT EXISTS us (
+                id SERIAL PRIMARY KEY, un TEXT UNIQUE NOT NULL,
+                pw TEXT NOT NULL, ca TEXT, kc TEXT, mt TEXT, aa TEXT, me TEXT,
+                ia INTEGER DEFAULT 0, ak TEXT, wi TEXT, aq INTEGER DEFAULT 50
+            )""")
+            c.commit()
+            return c
+        except Exception as e:
+            print(f"PG failed: {e}, fallback SQLite")
+    # SQLite fallback
     p = os.path.join(os.path.dirname(__file__), "kami.db")
     c = sqlite3.connect(p)
     c.row_factory = sqlite3.Row
@@ -38,9 +60,18 @@ def gd():
 
 def gc(l=16): return ''.join(random.choices(string.ascii_uppercase+string.digits,k=l))
 def rd(r): return dict(r) if r else None
-def q(c,s,p=None): return c.execute(s,p or [])
-def fo(c,s,p=None): r=c.execute(s,p or []); return r.fetchone()
-def fa(c,s,p=None): return c.execute(s,p or []).fetchall()
+def q(c,s,p=None):
+    if isinstance(c, sqlite3.Connection):
+        return c.execute(s,p or [])
+    cr = c.cursor(); cr.execute(s,p or []); return cr
+def fo(c,s,p=None):
+    if isinstance(c, sqlite3.Connection):
+        r = c.execute(s,p or []); return r.fetchone()
+    cr = c.cursor(); cr.execute(s,p or []); return cr.fetchone()
+def fa(c,s,p=None):
+    if isinstance(c, sqlite3.Connection):
+        r = c.execute(s,p or []); return r.fetchall()
+    cr = c.cursor(); cr.execute(s,p or []); return cr.fetchall()
 
 def sanitize(s):
     """过滤XSS和SQL注入字符"""
