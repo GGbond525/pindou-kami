@@ -2,5 +2,5 @@ services:
   - type: web
     name: pindou-kami
     runtime: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install flask
     startCommand: python kami_system.py

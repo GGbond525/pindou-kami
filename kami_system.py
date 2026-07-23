@@ -7,7 +7,10 @@ PERMANENT = "2099-12-31 23:59:59"
 DUR = {"1d":{"l":"天卡","d":1},"7d":{"l":"周卡","d":7},"perm":{"l":"永久","d":99999}}
 AQ = {"1d":10,"7d":50,"perm":999}
 if DB_URL:
-    import psycopg2, psycopg2.extras
+    try:
+        import psycopg2, psycopg2.extras
+    except ImportError:
+        DB_URL = ""
     def gd():
         c = psycopg2.connect(DB_URL); c.autocommit=False; cr = c.cursor()
         cr.execute("CREATE TABLE IF NOT EXISTS kc (id SERIAL PRIMARY KEY, co TEXT UNIQUE NOT NULL, cd TEXT NOT NULL DEFAULT 'm_perm', dr TEXT DEFAULT 'perm', dd INTEGER DEFAULT 99999, ca TEXT, cb TEXT, ub TEXT, ua TEXT, st TEXT DEFAULT 'unused')")
