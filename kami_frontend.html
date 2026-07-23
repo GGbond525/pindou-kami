@@ -227,6 +227,40 @@ function sta(){
   })};
   const s=document.createElement('script');s.type='module';s.crossOrigin='';s.src='https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-BUyD1zWX.js';
   document.getElementById('root').after(s);
+  // 注入CSS覆盖原版样式
+  const ps=document.createElement('style');
+  ps.textContent=`
+    /* 隐藏原版顶部重复导航 */
+    header.sticky{display:none!important}
+    /* 左侧面板内容分组加分割线 */
+    .overflow-y-auto.space-y-4 > div{border-top:1px solid #eee!important;padding-top:14px!important;margin-top:10px!important}
+    .overflow-y-auto.space-y-4 > div:first-child{border-top:none!important;padding-top:0!important;margin-top:0!important}
+    /* 收窄左侧面板 */
+    .overflow-y-auto.px-6{padding-left:12px!important;padding-right:12px!important}
+    /* 扩展右侧画布 */
+    .flex-1.min-w-0{flex:1!important;min-width:0!important}
+    /* 按钮统一 */
+    .rounded-md.border{transition:all .2s}
+    .rounded-md.border:active{transform:scale(.95)}
+    /* 上传区修正 - CSV替换提示已在JS中处理 */
+  `;
+  document.head.appendChild(ps);
+  // 延迟修正上传区文本和DOM
+  setTimeout(function(){
+    // 隐藏原版顶部导航
+    var hd=document.querySelector('header');
+    if(hd)hd.style.display='none';
+    // 替换CSV文案
+    document.querySelectorAll('label,span,p,div,button').forEach(function(el){
+      if(el.children.length>0)return;
+      var t=el.textContent||'';
+      if(t.includes('CSV'))el.textContent=t.replace(/CSV/g,'图片');
+    });
+    // 给置灰选项加提示
+    document.querySelectorAll('button[disabled]').forEach(function(b){
+      b.title=b.title||'暂不可用';
+    });
+  },2000);
   // 兼容性修复
   try{
     (function fixCanvasFont(){
