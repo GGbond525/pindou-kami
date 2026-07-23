@@ -52,7 +52,10 @@ body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100d
 .cp{padding:4px 12px;border:1.5px solid var(--primary);background:var(--surface);color:var(--primary);border-radius:6px;cursor:pointer;font-size:12px;transition:all .2s}
 .cp:hover{background:var(--primary);color:#fff}.cp.d{background:#2e7d32;color:#fff;border-color:#2e7d32}
 .gp .cb2{width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;margin-top:10px;font-size:14px}
-.tb2{position:fixed;top:0;left:0;right:0;z-index:99996;background:var(--primary);color:#fff;padding:3px 8px;font-size:11px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.15);height:26px;opacity:.92}
+.tb2{position:fixed;top:0;left:0;right:0;z-index:99996;background:var(--primary);color:#fff;padding:3px 8px;font-size:11px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.15);height:26px;opacity:.92;pointer-events:auto}
+/* 进App时隐藏顶栏，避免遮挡左侧面板 */
+#appr.show .tb2{display:none}
+#appr.show #root{height:100vh;overflow-y:auto}
 .tb2 .ls{font-family:var(--fd);font-size:14px;margin-right:4px}
 .tb2 a{color:var(--sec-l);cursor:pointer;white-space:nowrap}
 /* body padding removed to avoid breaking original app layout */
