@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>拼小豆 · 拼豆图纸生成器</title>
+<title>拼小豆</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;700;900&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
 <link rel="stylesheet" crossorigin href="https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-B-8XW312.css">
@@ -56,13 +56,9 @@ body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100d
 .tb2 .ls{font-family:var(--fd);font-size:12px;margin-right:4px;color:#ffe0d0}
 .tb2 a{color:var(--sec-l);cursor:pointer;white-space:nowrap;text-decoration:none;transition:opacity .2s}
 .tb2 a:hover{opacity:.7}
-.tb2 .sep{color:rgba(255,255,255,.25)}
-/* 原版App内：缩小为左上角胶囊标签,不遮挡左侧面板 */
 #appr.show .tb2{width:auto;left:auto;right:auto;top:3px;left:3px;border-radius:10px;padding:0 8px;height:16px;gap:2px;font-size:8px;opacity:.6;background:rgba(179,58,42,.6);backdrop-filter:blur(4px);transform:scale(.85);transform-origin:top left}
 #appr.show .tb2:hover{opacity:1;transform:scale(1)}
 #appr.show .tb2 .ls{display:none}
-/* 不给body加padding,让顶栏浮在内容上方 */
-/* body padding removed to avoid breaking original app layout */
 .gv{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px}
 .gv.s{display:flex}
 .gb{background:var(--surface);border-radius:var(--r);padding:clamp(20px,4vw,36px);width:min(520px,100%);max-height:85dvh;overflow-y:auto;animation:ci .4s ease;position:relative}
@@ -83,9 +79,12 @@ body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100d
   .tls button{font-size:11px;padding:6px 10px}.wa table{font-size:11px}.wa td,.wa th{padding:4px}
   .gp .cr .ct{font-size:12px}.gi{padding:12px}.gi .n{width:28px;height:28px;font-size:12px}
 }
+.tip-box{background:#fef8e7;border:1px solid #f5e6b8;border-radius:10px;padding:12px;margin:12px 0;text-align:left;font-size:12px;line-height:1.7;color:var(--ts)}
+.tip-box strong{color:var(--primary)}
+.tip-box .step{margin-bottom:2px}
 </style></head>
 <body>
-<div class="gv s" id="gv"><div class="gb"><button class="cx" onclick="cg()">&times;</button>
+<div class="gv" id="gv"><div class="gb"><button class="cx" onclick="cg()">&times;</button>
 <h2>🎯 拼小豆使用指南</h2>
 <div class="gs">
 <div class="gi"><div class="n">1</div><div class="bc"><h4>注册账号</h4><p>创建一个账号，管理你的会员状态</p></div></div>
@@ -95,8 +94,8 @@ body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100d
 <div class="gi"><div class="n">⭐</div><div class="bc"><h4>升级代理</h4><p>输入12位代理卡密+微信号，可生成卡密分发给他人</p><span class="cdm">XXXX XXXX XXXX</span></div></div></div>
 <button class="sb2" onclick="cg()">开始使用 🚀</button></div></div>
 
-<div class="pg show" id="pgr"><div class="cd"><div class="lg">拼小豆</div><div class="sb">注册账号，开启拼豆之旅</div>
-<input type="text" id="ru" placeholder="用户名"><input type="password" id="rp" placeholder="密码（至少6位）">
+<div class="pg show" id="pgr"><div class="cd"><div class="lg">拼小豆</div><div class="sb">注册账号，开始使用拼豆图纸工具</div>
+<input type="text" id="ru" placeholder="用户名"><input type="password" id="rp" placeholder="密码"><input type="password" id="rp2" placeholder="确认密码">
 <button class="btn" id="rb" onclick="rg()">注册</button><div class="msg" id="rm"></div>
 <div class="lk">已有账号？<a onclick="sl()">去登录</a> · <a onclick="sg()">使用指南</a></div></div></div>
 
@@ -105,13 +104,22 @@ body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100d
 <button class="btn" id="lb" onclick="li()">登录</button><div class="msg" id="lm"></div>
 <div class="lk">没有账号？<a onclick="sr()">去注册</a></div></div></div>
 
-<div class="pg" id="pgh"><div class="cd"><div class="lg">拼小豆</div><div class="sb" id="hw">欢迎！</div>
+<div class="pg" id="pgh"><div class="cd"><div class="lg">拼小豆</div><div class="sb" id="hw">你的会员尚未激活</div>
+<div class="tip-box">
+  <div class="step">📌 <strong>卡密是什么？</strong> 卡密是16位激活码，联系管理员或代理购买获取</div>
+  <div class="step">✅ <strong>激活后能做什么？</strong> 上传图片→生成拼豆图纸→下载打印，自由绘制像素画</div>
+  <div class="step">⭐ <strong>想赚钱？</strong> 输入12位代理卡密升级代理，生成卡密卖给别人</div>
+</div>
 <button class="btn" onclick="sa()">🎨 激活会员卡密</button>
 <button class="btn gd" onclick="sg()">📖 使用指南</button>
 <div class="lk"><a onclick="ads()" style="color:var(--tm)">管理后台</a></div></div></div>
 
-<div class="pg" id="pga"><div class="cd"><div class="lg">🎨</div><div class="sb">输入16位会员卡密</div>
-<input type="text" id="akc" maxlength="16" placeholder="16位卡密" oninput="this.value=this.value.toUpperCase()">
+<div class="pg" id="pga"><div class="cd"><div class="lg">🎨</div><div class="sb">输入16位卡密激活会员</div>
+<div class="tip-box">
+  <strong>还没有卡密？</strong> 联系给你分享链接的人购买获取。<br>
+  卡密激活后可使用：图片转图纸 · 像素画绘制 · 自由创作
+</div>
+<input type="text" id="akc" maxlength="16" placeholder="输入16位卡密" oninput="this.value=this.value.toUpperCase()">
 <button class="btn" id="ab" onclick="ac()">激活</button><div class="msg" id="am"></div>
 <div class="lk"><a onclick="bta()">返回</a></div></div></div>
 
@@ -148,9 +156,9 @@ body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100d
 <div id="uslb" style="display:none;margin-top:16px"><h3 style="color:var(--primary);font-size:16px;margin-bottom:8px">👤 注册用户</h3>
 <div style="max-height:300px;overflow-y:auto"><table><thead><tr><th>用户名</th><th>注册</th><th>会员</th><th>到期</th><th>代理</th><th>配额</th><th>微信</th></tr></thead><tbody id="ustb"></tbody></table></div></div></div></div></div>
 
-<div id="appr"><div class="tb2"><span class="ls">拼小豆</span>
+<div id="appr"><div class="tb2">
 <a id="bup" onclick="shaa()">⭐升级代理</a><a id="bag" onclick="ags()" style="display:none">⭐代理后台</a>
-<a onclick="sg()">📖指南</a><a onclick="ads()">⚙️管理</a><a onclick="lo()">🚪退出</a></div><div id="root"></div></div>
+<a onclick="ads()">⚙️管理</a><a onclick="sg()">📖指南</a><a onclick="lo()">🚪退出</a></div><div id="root"></div></div>
 
 <script>
 const B=location.origin;let cu='',aT='member',sT='unused';
@@ -162,9 +170,10 @@ function shh(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('s
 function sa(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('pga').classList.add('show');document.getElementById('am').textContent=''}
 function shaa(){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById('appr').classList.remove('show');document.getElementById('pgaa').classList.add('show');document.getElementById('aam').textContent=''}
 async function rg(){
-  const u=document.getElementById('ru').value.trim(),p=document.getElementById('rp').value,m=document.getElementById('rm'),b=document.getElementById('rb');
+  const u=document.getElementById('ru').value.trim(),p=document.getElementById('rp').value,p2=document.getElementById('rp2').value,m=document.getElementById('rm'),b=document.getElementById('rb');
   if(!u||!p){m.className='msg er';m.textContent='请填写完整';return}
   if(p.length<6){m.className='msg er';m.textContent='密码至少6位';return}
+  if(p!==p2){m.className='msg er';m.textContent='两次密码输入不一致';return}
   b.disabled=1;b.textContent='注册中...';
   try{const r=await fetch(B+'/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});const d=await r.json();
   if(d.s){m.className='msg ok';m.textContent='注册成功 🎉';setTimeout(sl,600)}else{m.className='msg er';m.textContent=d.m;b.disabled=0;b.textContent='注册'}
@@ -177,7 +186,7 @@ async function li(){
   try{const r=await fetch(B+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});const d=await r.json();
   if(d.s){cu=u;localStorage.setItem('kami_user',u);if(d.ia)localStorage.setItem('kami_agent','1');
     const r2=await fetch(B+'/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});const d2=await r2.json();
-    if(d2.act){localStorage.setItem('kami_ok','1');sta()}else{document.getElementById('hw').textContent='欢迎，'+u;shh()}
+    if(d2.act){localStorage.setItem('kami_ok','1');sta()}else{document.getElementById('hw').textContent='欢迎，'+u+'，你的会员尚未激活';shh()}
   }else{m.className='msg er';m.textContent=d.m;b.disabled=0;b.textContent='登录'}
   }catch(e){m.className='msg er';m.textContent='网络错误';b.disabled=0;b.textContent='登录'}
 }
@@ -219,36 +228,25 @@ function sta(){
   })};
   const s=document.createElement('script');s.type='module';s.crossOrigin='';s.src='https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-BUyD1zWX.js';
   document.getElementById('root').after(s);
-  // ===== 兼容性修复 =====
-  // 修复1: Canvas字体渲染 - 去掉900字重(PingFang/Microsoft YaHei 900在某些浏览器异常)
-  (function fixCanvasFont() {
-    const desc = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'font');
-    if (desc && desc.set) {
-      Object.defineProperty(CanvasRenderingContext2D.prototype, 'font', {
-        get: desc.get,
-        set: function(v) {
-          if (typeof v === 'string') {
-            v = v.replace(/\b900\b/g, '700').replace(/["']PingFang SC["'],?\s*/g, '');
-          }
-          desc.set.call(this, v);
-        }
-      });
-    }
+  // 兼容性修复
+  (function fixCanvasFont(){
+    const desc=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'font');
+    if(desc&&desc.set){Object.defineProperty(CanvasRenderingContext2D.prototype,'font',{get:desc.get,set:function(v){if(typeof v==='string'){v=v.replace(/\b900\b/g,'700').replace(/["']PingFang SC["'],?\s*/g,'')}desc.set.call(this,v)}})}
   })();
-  // 修复2: localStorage色号系统值强校验
-  try {
-    const cs = localStorage.getItem('perler_color_system');
-    if (cs && !['MARD','COCO','ManMan','PanPan','MiXiaoWo'].includes(cs)) {
-      localStorage.removeItem('perler_color_system');
-    }
-  } catch(e){}
-  // 修复3: 色斑预设值校验
-  try {
-    const pp = localStorage.getItem('perler_palette_preset');
-    if (pp && !['all','221','144','120','96','49'].includes(pp)) {
-      localStorage.removeItem('perler_palette_preset');
-    }
-  } catch(e){}
+  try{const cs=localStorage.getItem('perler_color_system');if(cs&&!['MARD','COCO','ManMan','PanPan','MiXiaoWo'].includes(cs))localStorage.removeItem('perler_color_system')}catch(e){}
+  try{const pp=localStorage.getItem('perler_palette_preset');if(pp&&!['all','221','144','120','96','49'].includes(pp))localStorage.removeItem('perler_palette_preset')}catch(e){}
+  // 修复原版App UI问题：上传区文案修正
+  setTimeout(function(){
+    document.querySelectorAll('button,label,span,p,div').forEach(function(el){
+      if(el.textContent&&el.textContent.includes('CSV')&&el.textContent.includes('上传'))el.textContent=el.textContent.replace(/CSV/gi,'图片')
+    })
+    // 修复"391色"选项无提示文字 - 添加tooltip
+    document.querySelectorAll('button,span').forEach(function(el){
+      if(el.textContent.includes('391')||el.textContent.includes('粉粉')||el.textContent.includes('抖动')){
+        el.title='点击选择此配色预设'
+      }
+    })
+  },3000)
 }
 function lo(){
   localStorage.removeItem('kami_ok');localStorage.removeItem('kami_agent');localStorage.removeItem('kami_user');
@@ -279,9 +277,9 @@ function adg(n,ct){fetch(B+'/api/admin/gen',{method:'POST',headers:{'Content-Typ
 function add(id){if(!confirm('删除？'))return;fetch(B+'/api/admin/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pw:document.getElementById('adpw').value,id})}).then(r=>r.json()).then(d=>{if(d.s)adr()})}
 function su(){const ul=document.getElementById('uslb');if(ul.style.display==='none'){fetch(B+'/api/admin/users?pw='+document.getElementById('adpw').value).then(r=>r.json()).then(d=>{if(d.s){document.getElementById('ustb').innerHTML=d.us.map(u=>{const mt={'1d':'1天','7d':'7天','perm':'永久'};const ml=mt[u.mt]||'-';const es=u.me?u.me.slice(0,10):'-';return '<tr><td>'+u.un+'</td><td>'+(u.ca||'-')+'</td><td>'+(u.kc?ml:'-')+'</td><td>'+(u.kc?es:'-')+'</td><td>'+(u.ia?'<span class="tag to">代理</span>':'<span class="tag tr">否</span>')+'</td><td>'+(u.aq||'-')+'</td><td>'+(u.wi||'-')+'</td></tr>'}).join('');ul.style.display='block'}})}else ul.style.display='none'}
 (function(){history.replaceState({p:'init'},'');
-setTimeout(()=>{if(!localStorage.getItem('kami_user'))sg()},1000);
 const u=localStorage.getItem('kami_user');if(u){cu=u;
   if(localStorage.getItem('kami_ok')){sta();return}
-  fetch(B+'/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})}).then(r=>r.json()).then(d=>{if(d.act){localStorage.setItem('kami_ok','1');sta()}else{document.getElementById('hw').textContent='欢迎，'+u;shh()}}).catch(()=>{if(localStorage.getItem('kami_ok'))sta();else sl()})
-}})();
+  fetch(B+'/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})}).then(r=>r.json()).then(d=>{if(d.act){localStorage.setItem('kami_ok','1');sta()}else{document.getElementById('hw').textContent='欢迎，'+u+'，你的会员尚未激活';shh()}}).catch(()=>{if(localStorage.getItem('kami_ok'))sta();else sl()})
+}else{setTimeout(sg,1000);sl()}
+})();
 </script></body></html>
