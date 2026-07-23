@@ -227,6 +227,16 @@ function sta(){
   })};
   const s=document.createElement('script');s.type='module';s.crossOrigin='';s.src='https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-cmg2zac479j4_1784219417188/assets/index-BUyD1zWX.js';
   document.getElementById('root').after(s);
+  // 最小化CSS修正
+  try{
+    var ps=document.createElement('style');
+    ps.textContent='button[class*="bg-primary"]{background:#222!important;color:#fff!important}'+
+      '.bg-primary{background:#222!important}'+
+      '.text-primary-foreground{color:#fff!important}'+
+      'input[type=range]{display:block!important;appearance:auto!important;-webkit-appearance:auto!important}'+
+      '.tb2{border-bottom:none!important}';
+    document.head.appendChild(ps);
+  }catch(e){}
   // 兼容性修复
   try{
     (function fixCanvasFont(){
