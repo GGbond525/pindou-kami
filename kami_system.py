@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import flask, os, random, string, datetime, hashlib, sqlite3
+import flask, os, random, string, datetime, hashlib, sqlite3, re, time
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -7,6 +7,17 @@ ADMIN_PASSWORD = "WzS18350168663."
 PERMANENT = "2099-12-31 23:59:59"
 DUR = {"1d":"天卡","7d":"周卡","perm":"永久"}
 AQ = {"1d":10,"7d":50,"perm":999}
+REG_LIMIT = {}  # IP -> timestamp for rate limiting
+
+# 隐藏版本信息
+import flask as _f
+_f.__version__ = ""
+
+@app.after_request
+def hide_headers(resp):
+    resp.headers.pop("Server", None)
+    resp.headers.pop("x-render-origin-server", None)
+    return resp
 
 def gd():
     p = os.path.join(os.path.dirname(__file__), "kami.db")
@@ -31,15 +42,32 @@ def q(c,s,p=None): return c.execute(s,p or [])
 def fo(c,s,p=None): r=c.execute(s,p or []); return r.fetchone()
 def fa(c,s,p=None): return c.execute(s,p or []).fetchall()
 
+def sanitize(s):
+    """过滤XSS和SQL注入字符"""
+    s = re.sub(r'[<>\'";]', '', s)
+    return s.strip()
+
 @app.route('/')
 def idx():
     return open(os.path.join(os.path.dirname(__file__),'kami_frontend.html'),encoding='utf-8').read()
 
 @app.route('/api/register', methods=['POST'])
 def reg():
-    d=request.get_json(); u=d.get('username','').strip(); p=d.get('password','').strip()
+    # 频率限制：同一IP 10秒内只能注册1次
+    ip = request.remote_addr or "0.0.0.0"
+    now = time.time()
+    if ip in REG_LIMIT and now - REG_LIMIT[ip] < 10:
+        return jsonify({"s":False,"m":"操作太频繁，请稍后重试"})
+    REG_LIMIT[ip] = now
+    # 清理过期记录
+    for k in list(REG_LIMIT.keys()):
+        if now - REG_LIMIT[k] > 60: del REG_LIMIT[k]
+
+    d=request.get_json(); u=sanitize(d.get('username','').strip()); p=d.get('password','').strip()
     if not u or not p: return jsonify({"s":False,"m":"请填写完整"})
     if len(p)<6: return jsonify({"s":False,"m":"密码至少6位"})
+    if len(u)>20: return jsonify({"s":False,"m":"用户名过长，最多20字符"})
+    if len(u)<2: return jsonify({"s":False,"m":"用户名至少2个字符"})
     c=gd()
     if fo(c,"SELECT id FROM us WHERE un=?",(u,)): c.close(); return jsonify({"s":False,"m":"用户名已存在"})
     h=hashlib.sha256(p.encode()).hexdigest(); n=datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
@@ -72,8 +100,8 @@ def act():
     n=datetime.datetime.now(); dd=r["dd"]; exp=(n+datetime.timedelta(days=int(dd))).strftime('%Y-%m-%d %H:%M:%S')
     ns=n.strftime('%Y-%m-%d %H:%M:%S')
     if dd>=99999: exp=PERMANENT
-    q(db,"UPDATE kc SET st='used', ub=?, ua=? WHERE id=?",(u,ns,r["id"]))
-    q(db,"UPDATE us SET kc=?, mt=?, aa=?, me=? WHERE un=?",(c,r["dr"],ns,exp,u))
+    db.execute("UPDATE kc SET st='used', ub=?, ua=? WHERE id=?",(u,ns,r["id"]))
+    db.execute("UPDATE us SET kc=?, mt=?, aa=?, me=? WHERE un=?",(c,r["dr"],ns,exp,u))
     db.commit(); db.close()
     return jsonify({"s":True,"m":f"激活成功！有效期至{exp[:10]}"})
 
@@ -87,8 +115,8 @@ def act_ag():
         used=fo(db,"SELECT * FROM kc WHERE code=? AND st='used'",(c,))
         db.close(); return jsonify({"s":False,"m":"代理卡密无效或已使用" if used else "代理卡密无效"})
     ns=datetime.datetime.now().strftime('%Y-%m-%d %H:%M'); qa=AQ.get(r["dr"],50)
-    q(db,"UPDATE kc SET st='used', ub=?, ua=? WHERE id=?",(u,ns,r["id"]))
-    q(db,"UPDATE us SET ia=1, ak=?, wi=?, aq=? WHERE un=?",(c,w,qa,u))
+    db.execute("UPDATE kc SET st='used', ub=?, ua=? WHERE id=?",(u,ns,r["id"]))
+    db.execute("UPDATE us SET ia=1, ak=?, wi=?, aq=? WHERE un=?",(c,w,qa,u))
     db.commit(); db.close(); return jsonify({"s":True,"m":"升级代理成功","aq":qa})
 
 @app.route('/api/check', methods=['POST'])
@@ -107,18 +135,19 @@ def chk():
 
 @app.route('/api/agent/generate', methods=['POST'])
 def ag_gen():
-    d=request.get_json(); u=d.get('username',''); n=min(d.get('count',1),20)
+    d=request.get_json(); u=d.get('username',''); n=min(d.get('count',1), 10)
     db=gd(); us=rd(fo(db,"SELECT * FROM us WHERE un=? AND ia=1",(u,)))
     if not us: db.close(); return jsonify({"s":False,"m":"无权限"}),403
     ud=rd(fo(db,"SELECT COUNT(*) as c FROM kc WHERE cb=?",(u,))); uc=ud["c"] if ud else 0
     qa=us.get("aq",50); rm=qa-uc
     if n>rm: n=rm
     if n<=0: db.close(); return jsonify({"s":False,"m":f"剩余配额{max(0,rm)}张"})
+    if n>10: n=10
     cs=[]; ns=datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
     for _ in range(n):
         code=gc(16)
         try:
-            q(db,"INSERT INTO kc (code,ct,dr,dd,ca,cb,st) VALUES (?,'m','perm',99999,?,?,'unused')",(code,ns,u))
+            db.execute("INSERT INTO kc (code,ct,dr,dd,ca,cb,st) VALUES (?,'m','perm',99999,?,?,'unused')",(code,ns,u))
             cs.append(code)
         except: pass
     db.commit(); db.close(); return jsonify({"s":True,"c":len(cs),"cs":cs})
@@ -142,7 +171,7 @@ def ag_ls():
 @app.route('/api/agent/set_wechat', methods=['POST'])
 def ag_wx():
     d=request.get_json(); db=gd()
-    q(db,"UPDATE us SET wi=? WHERE un=?",(d.get('wechat_id',''),d.get('username','')))
+    db.execute("UPDATE us SET wi=? WHERE un=?",(d.get('wechat_id',''),d.get('username','')))
     db.commit(); db.close(); return jsonify({"s":True})
 
 @app.route('/api/admin/login', methods=['POST'])
@@ -153,7 +182,7 @@ def ad_lg():
 def ad_gen():
     d=request.get_json()
     if d.get('pw')!=ADMIN_PASSWORD: return jsonify({"s":False}),403
-    n=min(d.get('n',1),200); ct=d.get('ct','m_perm')
+    n=min(d.get('n',1), 100); ct=d.get('ct','m_perm')
     p=ct.split('_'); dr=p[1] if len(p)>1 else "perm"; cl=12 if ct.startswith("a") else 16
     DD_MAP={"1d":1,"7d":7,"perm":99999}
     dd_val=DD_MAP.get(dr,99999)
@@ -161,7 +190,7 @@ def ad_gen():
     for _ in range(n):
         code=gc(cl)
         try:
-            q(db,"INSERT INTO kc (code,ct,dr,dd,ca,st) VALUES (?,?,?,?,?,'unused')",(code,ct,dr,dd_val,ns))
+            db.execute("INSERT INTO kc (code,ct,dr,dd,ca,st) VALUES (?,?,?,?,?,'unused')",(code,ct,dr,dd_val,ns))
             cs.append(code)
         except: pass
     db.commit(); db.close(); return jsonify({"s":True,"c":len(cs),"cs":cs,"ct":ct})
@@ -187,7 +216,7 @@ def ad_ls():
 def ad_dl():
     d=request.get_json()
     if d.get('pw')!=ADMIN_PASSWORD: return jsonify({"s":False}),403
-    db=gd(); q(db,"DELETE FROM kc WHERE id=?",(d['id'],)); db.commit(); db.close()
+    db=gd(); db.execute("DELETE FROM kc WHERE id=?",(d['id'],)); db.commit(); db.close()
     return jsonify({"s":True})
 
 @app.route('/api/admin/users')
